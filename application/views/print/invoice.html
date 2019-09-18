@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><head>
+	<title>Invoice</title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+		}
+		table{
+			width: 100%;
+			border-spacing: 0;
+		}
+		table.noborder{
+			border: 0;
+		}
+		table.bordered{
+			border-top: 1px solid #000;
+			border-right: 1px solid #000;
+		}
+		table.bordered td,
+		table.bordered th{
+			border-bottom: 1px solid #000;
+			border-left: 1px solid #000;
+			padding: 3px 5px;
+			line-height: 1.5;
+		}
+		table.bordered th {
+			background: #999999;
+		}
+		table td,
+		table th{
+			font-size: 13px;
+		}
+		h1{
+			font-size: 18px;
+			text-align: center;
+		}
+		h2{
+			font-size: 16px;
+			text-align: center;
+		}
+		.note{
+			font-style: italic;
+		}
+		p{
+			font-size: 13px;
+			line-height: 1.5;
+		}
+	
+	</style>
+</head><body>
+
+<img src="[LOGO]">
+
+<h1>Invoice</h1>
+
+<p>
+	<label>Waktu Cetak : </label> [TIME] <br>
+	<label>Dibuat Oleh : </label> [AUTHOR] <br>
+</p>
+
+<table class="bordered">
+	<tr>
+		<th width="5%">No</th>
+		<th width="10%">Item</th>
+		<th width="10%">Tujuan</th>
+		<th width="20%">Tanggal</th>
+		<th width="10%">Keterangan</th>
+		<th width="5%">QTY</th>
+		<th width="20%">Harga</th>
+		<th width="20%">Jumlah (Rp)</th>
+	</tr>
+	[DATA]
+</table>
+
+</body></html>
