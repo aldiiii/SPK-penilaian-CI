@@ -211,6 +211,15 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <!-- Kriteria -->
+                                    <li <?php if (in_array($menu, array('kriteria'))) echo "class='open active hasChild'"; ?>>
+                                        <a href="javascript:;"><i class="ti ti-file"></i><span>Kriteria</span></a>
+                                        <ul class="acc-menu" <?php if (in_array($menu, array('vak_question', 'kriteria'))) echo "style='display:block'"; ?>>
+                                            <li <?php if ($menu == 'kriteria') echo "class='active'"; ?>>
+                                                <a href="<?php echo site_url('kriteria'); ?>"><i class="fa fa-angle-right"></i> List Tester</a>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>

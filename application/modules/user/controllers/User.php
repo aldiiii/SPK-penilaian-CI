@@ -34,11 +34,11 @@ class User extends MX_Controller
 		/* Login proses */
 		if ($this->input->post('login')) {
 
-			$username 	= $this->input->post('username', true);
+			$email 			= $this->input->post('email', true);
 			$password 	= $this->input->post('password', true);
 
 			/* Check auth */
-			$auth = $this->_authModel->doAuth($username, $password);
+			$auth = $this->_authModel->doAuth($email, $password);
 
 			if (!$auth) {
 				$data['alert'] = "<div class='alert alert-danger text-center'>Nama pengguna tidak ditemukan</div>";

@@ -25,38 +25,32 @@
 			  	</div>
 			  	<div class="form-group">
 				    <label class="col-sm-2 control-label">No. Telpon</label>
-				    <div class="col-sm-4">
+				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="phone" id="phone" placeholder="Masukan nomor telepon (022xxxx/08xxxxx)">
 				    </div>
 			  	</div>
 			  	<div class="form-group">
 				    <label class="col-sm-2 control-label">Alamat</label>
-				    <div class="col-sm-10">
+				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat">
 				    </div>
 			  	</div>
-				<div class="form-group">
-	                <label class="col-sm-2 control-label">Level</label>
-	                <div class="col-sm-5">
-	                    <select id="level" class="form-control" name="level" id="level" style="width: 100%" data-placeholder="Pilih level">
-	                        <option value="">- Pilih level -</option>
-	                        <?php echo $optlevel; ?>
-	                    </select>
-	                </div>
-	            </div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Level</label>
+						<div class="col-sm-6">
+								<select id="level" class="form-control" name="level" id="level" style="width: 100%" data-placeholder="Pilih level">
+										<option value="">- Pilih level -</option>
+										<?php echo $optlevel; ?>
+								</select>
+						</div>
+					</div>
 			  	<div class="form-group">
-				    <label class="col-sm-2 control-label">Nama Pengguna</label>
-				    <div class="col-sm-6">
-				      	<input type="text" class="form-control" name="username" placeholder="Masukan nama pengguna">
-				    </div>
-			  	</div>
-			  	<!-- <div class="form-group">
 				    <label class="col-sm-2 control-label">Kata Sandi</label>
 				    <div class="col-sm-6">
 				      	<input type="password" class="form-control" name="password" id="password" placeholder="Maukan kata sandi">
 				    </div>
 			  	</div>
-			  	<div class="form-group">
+			  	<!-- <div class="form-group">
 				    <label class="col-sm-2 control-label">Ulangi Kata Sandi</label>
 				    <div class="col-sm-6">
 				      	<input type="password" class="form-control" name="retype" id="retype" placeholder="Masukan ulang kata sandi" data-required="true">

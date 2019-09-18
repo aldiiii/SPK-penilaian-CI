@@ -25,31 +25,35 @@
 			  	</div>
 			  	<div class="form-group">
 				    <label class="col-sm-2 control-label">No. Telepon</label>
-				    <div class="col-sm-4">
+				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="phone" id="phone" placeholder="Masukan nomor telepon (022xxxx/08xxxxx)" value="<?php echo $data->user_phone; ?>">
 				    </div>
 			  	</div>
 			  	<div class="form-group">
 				    <label class="col-sm-2 control-label">Alamat</label>
-				    <div class="col-sm-10">
+				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat" value="<?php echo $data->user_address; ?>">
 				    </div>
 			  	</div>
-				<div class="form-group">
-	                <label class="col-sm-2 control-label">Level</label>
-	                <div class="col-sm-5">
-	                    <select id="level" class="form-control" name="level" id="level" style="width: 100%" data-placeholder="Pilih Level">
-	                        <option value="">- Pilih Level -</option>
-	                        <?php echo $optlevel; ?>
-	                    </select>
-	                </div>
-	            </div>
-			  	<div class="form-group">
-				    <label class="col-sm-2 control-label">Nama Pengguna</label>
-				    <div class="col-sm-6">
-				      	<input type="text" class="form-control" name="username" id="username" placeholder="Masukan nama pengguna" value="<?php echo $data->user_username; ?>">
-				    </div>
-			  	</div>
+					<div class="form-group">
+							<label class="col-sm-2 control-label">Level</label>
+							<div class="col-sm-6">
+									<select id="level" class="form-control" name="level" id="level" style="width: 100%" data-placeholder="Pilih Level">
+											<option value="">- Pilih Level -</option>
+											<?php echo $optlevel; ?>
+									</select>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="col-sm-2 control-label" for="bobot_kriteria">Status<span class="form-mark">*</span></label>
+							<div class="col-sm-6">
+								<select name="user_status" id="status" class="form-control">
+										<option value="">Pilih Status</option>
+										<option <?php echo ($data->user_status == 1) ? "selected" : ""; ?> value="1">Aktif</option>
+										<option <?php echo ($data->user_status == 2) ? "selected" : ""; ?> value="2">Tidak Aktif</option>
+								</select>
+							</div>
+					</div>
 			  	<!-- <div class="form-group">
 				    <label class="col-sm-2 control-label">Kata Sandi</label>
 				    <div class="col-sm-6">

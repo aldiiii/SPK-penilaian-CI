@@ -23,14 +23,14 @@ class AuthModel extends CI_Model{
 
 	}
 
-	public function doAuth($username = NULL){
+	public function doAuth($email = NULL){
 
 		$res = false;
 
 		try {
-			$username 	= $this->db->escape($username);
+			$email 	= $this->db->escape($email);
 
-			$sql 		= "SELECT * FROM ". $this->table ." WHERE user_username = $username";
+			$sql 		= "SELECT * FROM ". $this->table ." WHERE user_email = $email";
 			$query 		= $this->db->query($sql);
 			
 			if($query->num_rows() > 0){

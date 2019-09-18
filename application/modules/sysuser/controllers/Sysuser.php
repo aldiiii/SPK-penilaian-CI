@@ -164,7 +164,6 @@ class Sysuser extends MX_Controller {
 			$phone		= $this->input->post('phone');
 			$address	= $this->input->post('address');
 			$level		= $this->input->post('level');
-			$username	= $this->input->post('username');
 			$password	= $this->input->post('password');
 			$password 	= $this->_authModel->hashing($password);
 
@@ -174,9 +173,7 @@ class Sysuser extends MX_Controller {
 						'user_phone' 		=> $phone,
 						'user_address' 		=> $address,
 						'user_level_id' 	=> $level,
-						'user_username' 	=> $username,
 						'user_password' 	=> $password,
-						'user_type' 		=> $type,
 					);
 
 			$res 	= $this->_dataModel->insert($this->table, $value);
@@ -239,8 +236,7 @@ class Sysuser extends MX_Controller {
 			$phone		= $this->input->post('phone');
 			$address	= $this->input->post('address');
 			$level		= $this->input->post('level');
-			$username	= $this->input->post('username');
-			// $password	= $this->input->post('password');
+			$status	= $this->input->post('user_status');
 
 			// if (empty($password)) {
 				$value 	= array(
@@ -249,8 +245,7 @@ class Sysuser extends MX_Controller {
 							'user_phone' 		=> $phone,
 							'user_address' 		=> $address,
 							'user_level_id' 	=> $level,
-							'user_username' 	=> $username,
-							'user_type' 		=> $type,
+							'user_status' 		=> $status,
 						);
 			// }
 			// else{

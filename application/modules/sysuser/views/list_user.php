@@ -24,7 +24,6 @@
 								<option value="">-- Cari Berdasarkan --</option>
 								<option value="user_name" 		<?php if($param == 'user_name') echo "selected"; ?>>Nama</option>
 								<option value="user_email" 		<?php if($param == 'user_email') echo "selected"; ?>>Email</option>
-								<option value="user_user_name" 	<?php if($param == 'user_user_name') echo "selected"; ?>>Nama Pengguna</option>
 							</select>
 						</div>
 					  	<div class="form-group">
@@ -40,9 +39,8 @@
 					<thead>
 						<tr>
 							<th width="5%">No</th>
-							<th width="17.5%">Nama</th>
+							<th width="35%">Nama</th>
 							<th width="17.5%">Email</th>
-							<th width="17.5%">Nama Pengguna</th>
 							<th width="15%">Level</th>
 							<th width="12.5%">Status</th>
 							<th width="15%"></th>
@@ -79,7 +77,6 @@
 								<td>". $no ."</td>
 								<td>". $result['user_name'] ."</td>
 								<td>". $result['user_email'] ."</td>
-								<td>". $result['user_username'] ."</td>
 								<td>". $result['user_level_name'] ."</td>
 								<td>". $status ."</td>
 								<td class='table-action text-right'>

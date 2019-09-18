@@ -14,7 +14,7 @@
                                 <span class="input-group-addon">
                                     <i class="ti ti-user"></i>
                                 </span>
-                                <input type="text" class="form-control" placeholder="Nama Pengguna" name="username" id="username">
+                                <input type="email" class="form-control" placeholder="Email" name="email" id="email">
                             </div>
                         </div>
                     </div>
