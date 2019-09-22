@@ -11,7 +11,7 @@
         </div>
 
         <div class="text-center">
-            &copy; 2019. Teman Sharing
+            &copy; 2019. Penilaian Kinerja Penutur
         </div>
     </div>
 </div>

@@ -42,7 +42,7 @@
         </div>
 
         <div class="text-center">
-            &copy; 2019. SPK Penilaian
+            &copy; 2019. Penilaian Kinerja Penutur
         </div>
     </div>
 </div>

@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title><?php if (!empty($title)) echo $title . " - "; ?> Teman Sharing Test Tools</title>
+    <title><?php if (!empty($title)) echo $title . " - "; ?> Penilaian Kinerja Penutur</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="description" content="Teman Sharing Test Tools">
+    <meta name="description" content="Penilaian Kinerja Penutur">
     <meta name="author" content="Indra Prasetya">
 
     <link type='text/css' href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600' rel='stylesheet'>
@@ -71,7 +71,7 @@
                 </a>
             </span>
 
-            <a class="navbar-brand" href="<?php echo site_url(); ?>">Teman Sharing Test Tools</a>
+            <a class="navbar-brand" href="<?php echo site_url(); ?>">Penilaian Kinerja Penutur</a>
 
         </div><!-- logo-area -->
 
@@ -236,7 +236,7 @@
                     <div class="clearfix">
                         <ul class="list-unstyled list-inline pull-left">
                             <li>
-                                <h6 style="margin: 0;">&copy; 2019. Teman Sharing</h6>
+                                <h6 style="margin: 0;">&copy; 2019. Penilaian Kinerja Penutur</h6>
                             </li>
                         </ul>
                         <button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top"><i class="ti ti-arrow-up"></i></button>

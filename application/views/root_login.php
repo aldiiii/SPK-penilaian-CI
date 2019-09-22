@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>SPK Penilaian</title>
+    <title>Penilaian Kinerja Penutur</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -34,7 +34,7 @@
 
     <div class="container" id="login-form">
         <a href="<?php echo site_url(); ?>" class="login-logo"><img src="<?php echo base_url(); ?>assets/img/logo.png">
-            <h3>SPK Penilaian </h3>
+            <h3>Penilaian Kinerja Penutur </h3>
         </a>
         <?php echo $content; ?>
     </div>
