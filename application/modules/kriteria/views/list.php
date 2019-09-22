@@ -37,11 +37,11 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th width="25%">ID Kriteria</th>
+							<th width="10%">Kode Kriteria</th>
 							<th width="35%">Nama Kritertia</th>
 							<th width="15%">Bobot</th>
 							<th width="15%">Status</th>
-							<th width="10%" class="text-center">Aksi</th>
+							<th width="35%" class="text-center">Aksi</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -62,11 +62,12 @@
 								}
 								echo "
 							<tr>
-								<td>C" . $result['kriteria_id'] . "</td>
+								<td>" . $result['kode'] . "</td>
 								<td>" . $result['nama'] . "</td>
 								<td>" . $result['bobot'] . "</td>
 								<td><span class='label label-".$label."'>". $status_label ."</span></td>
 								<td class='table-action text-right'>
+									<a class='btn btn-sm btn-primary' href='".base_url()."detailkriteria/index/".$result['kriteria_id']."'>Lihat Detail</a>
 									<form action='" . site_url() . "kriteria/edit/" . $result['kriteria_id'] . "' >
 										<button class='btn btn-sm btn-default-alt' data-toggle='tooltip' title='Ubah'><i class='fa fa-pencil'></i></button>
 									</form>

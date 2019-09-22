@@ -1,38 +1,39 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Kriteria
+ * Jabatan Controller.
  *
- * Updated  2018, 10 June 22:59
+ * Updated  2017, 3 Juni 11:10
  *
- * @author  Indra Prasetya <indraprasetya154@gmail.com>
+ * @author  Yudi Setiadi Permana <hi@yudipermana.com>
  *
  */
 
-class Kriteria extends MX_Controller
-{
+class Detailkriteria extends MX_Controller {
 
-	function __construct()
-	{
+	function __construct(){
 
 		parent::__construct();
 
 		$this->system 	= $this->config->item('system');
 		$this->prefix 	= $this->db->dbprefix;
-		$this->table 	= $this->prefix . "_kriteria";
-		$this->pkey 	= "kriteria_id";
-		$this->module 	= "kriteria";
+		$this->table 	= $this->prefix ."_detail_kriteria";
+		$this->join 	= $this->prefix ."_kriteria";
+		$this->pkey 	= "kriteria_detail_id";
+		$this->fkey 	= "kriteria_id";
+		$this->module 	= "detailkriteria";
+		$this->id 		= $this->uri->segment(3);
+		
 	}
 
-	public function index()
-	{
+	public function index(){
 
-		$this->page();
+		$this->page();		
+		
 	}
 
-	public function page()
-	{
+	public function page(){
 
 		//auth
 		$this->auth->authorize($this->system['userData'], $this->module, 'list');
@@ -44,31 +45,38 @@ class Kriteria extends MX_Controller
 		$msg 	= $this->session->flashdata('message');
 
 		//alert
-		if ($msg != '') {
+		if($msg != ''){
 
 			$alert 	= "
 						<div class='alert alert-success'>
 						    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-						    <strong>SUCCESS !</strong> " . $msg . ".
+						    <strong>SUCCESS !</strong> ". $msg .".
 						</div>
 					";
 
 			$this->session->set_flashdata('message', '');
+
 		}
 
 		//paggination
-		$pagging_uri = 3;
+		$pagging_uri = 4;
 
-		if ($this->uri->segment($pagging_uri)) {
+		if($this->uri->segment($pagging_uri)){
 			$start = $this->uri->segment($pagging_uri);
-		} else {
+		}
+		else{
 			$start = 0;
 		}
 
-		$limit 			= 20;
-		$data['datas']	= $this->_dataModel->get_data($this->table, '', $limit, $start, array('kriteria_id', 'DESC'));
+		$where = $this->table.".kriteria_id = ".$this->id."";
 
-		$config['base_url'] 	= site_url('kriteria/page/');
+		$limit 			= 20;
+		$join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
+		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
+		$data['datas']	= $this->_dataModel->get_data($this->table, $where, $limit, $start, array('nama_detail_kriteria', 'ASC'), $join);
+		// echo $this->db->last_query(); die;
+		
+		$config['base_url'] 	= site_url('detailkriteria/page/');
 		$config['total_rows'] 	= $this->_dataModel->table_record_count;
 		$config['per_page'] 	= $limit;
 		$config['uri_segment'] 	= $pagging_uri;
@@ -82,13 +90,13 @@ class Kriteria extends MX_Controller
 		$data['key'] 			= '';
 		$data['param'] 			= '';
 
-		$this->template->set('title', 'Kriteria');
-		$this->template->set('menu',  'kriteria');
+		$this->template->set('title', 'Detail Kriteria');
+		$this->template->set('menu',  'detailkriteria');
 		$this->template->load('root', 'list', $data);
-	}
 
-	public function search()
-	{
+	} 
+
+	public function search(){
 
 		//auth
 		$this->auth->authorize($this->system['userData'], $this->module, 'list');
@@ -101,19 +109,23 @@ class Kriteria extends MX_Controller
 		$search = array($param => $key);
 
 		//paggination
-		$pagging_uri = 3;
+		$pagging_uri = 4;
 
-		if ($this->uri->segment($pagging_uri)) {
+		if($this->uri->segment($pagging_uri)){
 			$start = $this->uri->segment($pagging_uri);
-		} else {
+		}
+		else{
 			$start = 0;
 		}
+		$where = "'kriteria_id' = ".$this->id."";
 
 		$limit 			= 20;
-		$data['datas']	= $this->_dataModel->get_search($this->table, $search, $limit, $start, array('kriteria_id', 'ASC'), '');
+		$join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
+		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
+		$data['datas']	= $this->_dataModel->get_search($this->table, $search, $limit, $start, array('nama_detail_kriteria', 'ASC'), $where, $join);
 
-		$config['base_url'] 	= site_url('kriteria/search/');
-		$config['suffix'] 		= "?key=" . $key . "&param=" . $param;
+		$config['base_url'] 	= site_url('detailkriteria/search/');
+		$config['suffix'] 		= "?key=". $key ."&param=". $param;
 		$config['first_url'] 	= $config['base_url'] . $config['suffix'];
 		$config['total_rows'] 	= $this->_dataModel->table_record_count;
 		$config['per_page'] 	= $limit;
@@ -121,11 +133,11 @@ class Kriteria extends MX_Controller
 
 		$this->pagination->initialize($config);
 
-		$msg 	= "Hasil pencarian untuk ' <i>" . $key . "</i> '";
+		$msg 	= "Hasil pencarian untuk ' <i>". $key ."</i> '";
 		$alert 	= "
 					<div class='alert alert-success'>
 					    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-					    <strong>SUCCESS !</strong> " . $msg . ".
+					    <strong>SUCCESS !</strong> ". $msg .".
 					</div>
 				";
 
@@ -136,31 +148,32 @@ class Kriteria extends MX_Controller
 		$data['key'] 			= $key;
 		$data['param'] 			= $param;
 
-		$this->template->set('title', 'Kriteria');
-		$this->template->set('menu',  'kriteria');
+		$this->template->set('title', 'Detail Kriteria');
+		$this->template->set('menu',  'detailkriteria');
 		$this->template->load('root', 'list', $data);
-	}
 
-	public function add()
-	{
+	} 
+
+	public function add(){
 
 		//auth
 		$this->auth->authorize($this->system['userData'], $this->module, 'add');
 		$this->urlpattern->resetQueryString();
 
+		$id = $this->uri->segment(3);
+		
 		$data 	= array();
+		$data['id_kriteria'] = $id;
 
 		if ($this->input->post('submit')) {
 
-			$kode = $this->input->post('kode');
-			$nama_kriteria = $this->input->post('nama_kriteria');
-			$bobot_kriteria = $this->input->post('bobot_kriteria');
+			$nama_detail_kriteria = $this->input->post('nama_detail_kriteria');
+			$id_kriteria = $this->input->post('id_kriteria');
 			$date			= date('Y-m-d H:i:s');
 
 			$value 	= array(
-				'kode'	 		=> $kode,
-				'nama'	 		=> $nama_kriteria,
-				'bobot'			=> $bobot_kriteria,
+				'nama_detail_kriteria'	 		=> $nama_detail_kriteria,
+				'kriteria_id'	 		=> $id_kriteria,
 				'created_at' => $date,
 				'updated_at' => $date
 			);
@@ -169,80 +182,75 @@ class Kriteria extends MX_Controller
 
 			if ($res) {
 
-				$msg = "Kriteria berhasil ditambahkan";
+				$msg = "Detail kriteria berhasil ditambahkan";
 
 				$this->session->set_flashdata('message', $msg);
 
 				// redirect($this->urlpattern->getRedirect());
-				redirect(site_url('kriteria'));
+				redirect(site_url('detailkriteria/index/').$id_kriteria);
 			}
 		}
 
-		$this->template->set('title', 'Tambah Kriteria');
-		$this->template->set('menu',  'kriteria');
+		$this->template->set('title', 'Tambah Detail Kriteria');
+		$this->template->set('menu',  'detailkriteria');
 		$this->template->load('root', 'add', $data);
+
 	}
 
-	public function edit($id)
-	{
-
+	public function edit($id, $kriteria_id){
 		//auth
 		$this->auth->authorize($this->system['userData'], $this->module, 'edit');
 		$this->urlpattern->resetQueryString();
 
 		$data 	= array();
 		$detail = $this->_dataModel->getDetail($this->table, $this->pkey, $id);
+		$data['kriteria_id'] 		= $kriteria_id;
 
 		//check data
 		if (!$detail) {
 			echo "
 				<script type='text/javascript'>
 					alert('Data yang dimaksud tidak sersedia');
-					document.location = '" . $this->urlpattern->getRedirect() . "';
+					document.location = '". $this->urlpattern->getRedirect() ."';
 				</script>
 			";
 
 			exit;
 		}
 
-		if ($this->input->post('submit')) {
+		if($this->input->post('submit')){
 
-			$nama_kriteria = $this->input->post('nama_kriteria');
-			$bobot_kriteria = $this->input->post('bobot_kriteria');
-			$status_kriteria = $this->input->post('status_kriteria');
-			$kode = $this->input->post('kode');
+			$nama_detail_kriteria = $this->input->post('nama_detail_kriteria');
 			$date			= date('Y-m-d H:i:s');
-
+			
 			$value 	= array(
-				'kode'	 		=> $kode,
-				'nama'	 		=> $nama_kriteria,
-				'bobot'			=> $bobot_kriteria,
-				'status'			=> $status_kriteria,
+				'nama_detail_kriteria'	 		=> $nama_detail_kriteria,
 				'updated_at' => $date
 			);
 
 			$res 	= $this->_dataModel->update($this->table, $this->pkey, $id, $value);
 
-			if ($res) {
+			if($res){
 
-				$msg = "Kriteria berhasil diubah";
+				$msg = "detailkriteria berhasil ditambahkan";
 
 				$this->session->set_flashdata('message', $msg);
 
 				// redirect($this->urlpattern->getRedirect());
-				redirect(site_url('kriteria'));
+				redirect(site_url('detailkriteria/index/').$kriteria_id);
+
 			}
 		}
 
 		$data['data'] 		= $detail;
 
-		$this->template->set('title', 'Ubah Kriteria');
-		$this->template->set('menu',  'kriteria');
+		$this->template->set('title', 'Ubah Detail Kriteria');
+		$this->template->set('menu',  'detailkriteria');
 		$this->template->load('root', 'edit', $data);
+
 	}
 
-	public function delete($id)
-	{
+	public function delete($id, $kriteria_id){
 
 		//auth
 		$this->auth->authorize($this->system['userData'], $this->module, 'delete');
@@ -255,7 +263,7 @@ class Kriteria extends MX_Controller
 			echo "
 				<script type='text/javascript'>
 					alert('Data yang dimaksud tidak sersedia');
-					document.location = '" . $this->urlpattern->getRedirect() . "';
+					document.location = '". $this->urlpattern->getRedirect() ."';
 				</script>
 			";
 
@@ -264,14 +272,17 @@ class Kriteria extends MX_Controller
 
 		$res 	= $this->_dataModel->delete($this->table, $this->pkey, $id);
 
-		if ($res) {
+		if($res){
 
-			$msg = "Kriteria berhasil dihapus";
+			$msg = "detailkriteria berhasil dihapus";
 
 			$this->session->set_flashdata('message', $msg);
 
 			// redirect($this->urlpattern->getRedirect());
-			redirect(site_url('kriteria'));
+			redirect(site_url('detailkriteria/index/').$kriteria_id);
+
 		}
+
 	}
+
 }

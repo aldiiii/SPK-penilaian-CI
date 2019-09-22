@@ -12,6 +12,10 @@
         <div class="panel-body">
             <form action="<?php echo site_url('kriteria/edit/' . $data->kriteria_id); ?>" method="POST" id="addForm" enctype="multipart/form-data">
                 <div class="form-group col-sm-12">
+                    <label class="control-label" for="kode">Kode<span class="form-mark">*</span></label>
+                    <input type="text" class="form-control" name="kode" id="kode" placeholder="Masukan Pertanyaan" value="<?php echo $data->kode; ?>">
+                </div>
+                <div class="form-group col-sm-12">
                     <label class="control-label" for="nama_kriteria">Nama Kriteria<span class="form-mark">*</span></label>
                     <input type="text" class="form-control" name="nama_kriteria" id="nama_kriteria" placeholder="Masukan Pertanyaan" value="<?php echo $data->nama; ?>">
                 </div>
@@ -41,10 +45,12 @@
     $(document).ready(function() {
         $("#addForm").validate({
             rules: {
+                kode: "required",
                 nama_kriteria: "required",
                 bobot_kriteria: "required",
             },
             messages: {
+                kode: "Nama kriteria tidak boleh kosong",
                 nama_kriteria: "Nama kriteria tidak boleh kosong",
                 bobot_kriteria: "Bobot kriteria tidak boleh kosong",
             },

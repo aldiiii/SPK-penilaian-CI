@@ -7,24 +7,17 @@
 <div class="container-fluid">
     <div class="panel">
         <div class="panel-heading">
-            <h2 class="panel-title">Tambah Kriteria</h2>
+            <h2 class="panel-title">Tambah Detail Kriteria</h2>
         </div>
         <div class="panel-body">
-            <form action="<?php echo site_url('kriteria/add'); ?>" method="POST" id="addForm" enctype="multipart/form-data">
+            <form action="<?php echo site_url('detailkriteria/add'); ?>" method="POST" id="addForm" enctype="multipart/form-data">
                 <div class="form-group col-sm-12">
-                    <label class="control-label" for="kode">Kode<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="kode" id="kode" placeholder="Masukan Pertanyaan">
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label" for="nama_kriteria">Nama Kriteria<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="nama_kriteria" id="nama_kriteria" placeholder="Masukan Pertanyaan">
-                </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label" for="bobot_kriteria">Bobot Kriteria<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="bobot_kriteria" id="bobot_kriteria" placeholder="Masukan Pertanyaan">
+                    <label class="control-label" for="nama_detail_kriteria">Nama Detail Kriteria<span class="form-mark">*</span></label>
+                    <input type="text" class="form-control" name="nama_detail_kriteria" id="nama_detail_kriteria" placeholder="Masukan Pertanyaan">
                 </div>
                 <div class="form-group col-sm-12">
                     <input type="hidden" name="submit" value="true">
+                    <input type="hidden" name="id_kriteria" value="<?php echo $id_kriteria; ?>">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <button type="button" class="btn btn-default btn-cancel">Batal</button>
                 </div>
@@ -37,14 +30,10 @@
     $(document).ready(function() {
         $("#addForm").validate({
             rules: {
-                kode: "required",
-                nama_kriteria: "required",
-                bobot_kriteria: "required",
+                nama_detail_kriteria: "required",
             },
             messages: {
-                kode: "Nama kriteria tidak boleh kosong",
-                nama_kriteria: "Nama kriteria tidak boleh kosong",
-                bobot_kriteria: "Bobot kriteria tidak boleh kosong",
+                nama_detail_kriteria: "Nama detail kriteria tidak boleh kosong",
             },
             errorElement: "em",
             errorPlacement: function(error, element) {
