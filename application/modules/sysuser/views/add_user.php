@@ -12,11 +12,38 @@
 		<div class="panel-body">
 			<form class="form-horizontal" action="<?php echo site_url('sysuser/add'); ?>" method="POST" id="addForm">
 				<div class="form-group">
-				    <label class="col-sm-2 control-label">Nama</label>
+				    <label class="col-sm-2 control-label">NIK</label>
+				    <div class="col-sm-6">
+				      	<input type="text" class="form-control" name="nik" id="nik" placeholder="Masukan NIK">
+				    </div>
+			  	</div>
+          		<div class="form-group">
+				    <label class="col-sm-2 control-label">Nama Lengkap</label>
 				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="name" id="name" placeholder="Masukan nama">
 				    </div>
 			  	</div>
+          		<div class="form-group">
+				    <label class="col-sm-2 control-label">Alamat</label>
+				    <div class="col-sm-6">
+				      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat">
+				    </div>
+			  	</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Agama</label>
+					<div class="col-sm-6">
+							<select id="agama" class="form-control" name="agama" id="agama" style="width: 100%" data-placeholder="Pilih level">
+									<option value="">- Pilih Agama -</option>
+									<?php echo $data_agama; ?>
+							</select>
+					</div>
+				</div>
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">Tanggal Lahir</label>
+				    <div class="col-sm-6">
+				      	<input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir" placeholder="Masukan tanggal lahir">
+					</div>
+				</div>
 			  	<div class="form-group">
 				    <label class="col-sm-2 control-label">Email</label>
 				    <div class="col-sm-6">
@@ -24,17 +51,17 @@
 				    </div>
 			  	</div>
 			  	<div class="form-group">
-				    <label class="col-sm-2 control-label">No. Telpon</label>
+				    <label class="col-sm-2 control-label">Kontak</label>
 				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="phone" id="phone" placeholder="Masukan nomor telepon (022xxxx/08xxxxx)">
 				    </div>
-			  	</div>
-			  	<div class="form-group">
-				    <label class="col-sm-2 control-label">Alamat</label>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">Mulai Kerja</label>
 				    <div class="col-sm-6">
-				      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat">
+				      	<input type="date" class="form-control" name="mulai_kerja" id="mulai_kerja" placeholder="Masukan tanggal mulai kerja">
 				    </div>
-			  	</div>
+				</div>
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Level</label>
 						<div class="col-sm-6">

@@ -34,6 +34,15 @@ class Sysuser extends MX_Controller {
 		
 	}
 
+	public function get_list_agama() {
+		return $list_agama = [
+			"islam",
+			"kristen",
+			"budha",
+			"hindu",
+		];
+	}
+
 	public function page(){
 
 		//auth
@@ -156,20 +165,49 @@ class Sysuser extends MX_Controller {
 		$this->urlpattern->resetQueryString();
 
 		$data 	= array();
+		$agama = null;
 
 		if($this->input->post('submit')){
 
+			$nik		= $this->input->post('nik');
 			$name		= $this->input->post('name');
 			$email		= $this->input->post('email');
+			$agama		= $this->input->post('agama');
+			$tgl_lahir	= $this->input->post('tgl_lahir');
 			$phone		= $this->input->post('phone');
 			$address	= $this->input->post('address');
 			$level		= $this->input->post('level');
+			$start_work = $this->input->post('mulai_kerja');
 			$password	= $this->input->post('password');
 			$password 	= $this->_authModel->hashing($password);
 
+			$data_agama = 0;
+			switch($agama) {
+				case 1:
+				 $data_agama = 'islam';
+				 break;
+				 case 2:
+				 $data_agama = 'kristen';
+				 break;
+				 case 3:
+				 $data_agama = 'budha';
+				 break;
+				 case 4:
+				 $data_agama = 'hindu';
+				 break;
+				 case 5:
+				 $data_agama = 'lainnya';
+				 break;
+				
+			}
+
 			$value 	= array(
+						'user_nik' 			=> $nik,
 						'user_name' 		=> $name,
 						'user_email' 		=> $email,
+						'user_agama' 		=> $data_agama,
+						'user_tgl_lahir' 	=> $tgl_lahir,
+						'user_start_work' 	=> $start_work,
 						'user_phone' 		=> $phone,
 						'user_address' 		=> $address,
 						'user_level_id' 	=> $level,
@@ -190,7 +228,11 @@ class Sysuser extends MX_Controller {
 			}	
 
 		}
-
+		$index = 1;
+		$list_agama = $this->get_list_agama();
+		foreach ( $list_agama as $result) { 
+			$agama .= "<option value='". $index++ ."'>". $result ."</option>";
+		}
 		$getLevel = $this->_dataModel->getList($this->join, array('user_level_id >=' => '2'), array('user_level_name', 'ASC'));
 		$optLevel = "";
 
@@ -201,6 +243,7 @@ class Sysuser extends MX_Controller {
 		}
 
 		$data['optlevel'] 	= $optLevel;
+		$data['data_agama'] = $agama;
 
 		$this->template->set('title', 'Sistem User');
 		$this->template->set('menu',  'user');
@@ -281,6 +324,16 @@ class Sysuser extends MX_Controller {
 		$getLevel = $this->_dataModel->getList($this->join, array('user_level_id >=' => '2'), array('user_level_name', 'ASC'));
 		$optLevel = "";
 
+		$index = 0;
+		$list_agama = $this->get_list_agama();
+		$agama = null;
+		foreach ( $list_agama as $result) { 
+			// print_r(); die;
+			$select  	 = $result == $detail->user_agama ? "selected" : "";
+			// print_r($select);die;
+			$agama .= "<option value='". $index++ ."' $select>". $result ."</option>";
+		}
+
 		if ($getLevel) {
 			foreach ($getLevel as $result) { 
 				$select  	 = $result['user_level_id'] == $detail->user_level_id ? "selected" : "";
@@ -290,6 +343,7 @@ class Sysuser extends MX_Controller {
 
 		$data['optlevel'] 	= $optLevel;
 		$data['data'] 		= $detail;
+		$data['data_agama'] = $agama;
 
 		$this->template->set('title', 'Sistem User');
 		$this->template->set('menu',  'user');
