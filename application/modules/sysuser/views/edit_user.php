@@ -12,21 +12,15 @@
 		<div class="panel-body">
 			<form class="form-horizontal" action="<?php echo site_url('sysuser/edit/'. $data->user_id); ?>" method="POST" id="addForm">
 				<div class="form-group">
-				    <label class="col-sm-2 control-label">Name</label>
+				    <label class="col-sm-2 control-label">NIK</label>
+				    <div class="col-sm-6">
+				      	<input type="text" class="form-control" name="nik" id="nik" placeholder="Masukan NIK" value="<?php echo $data->user_nik; ?>">
+				    </div>
+			  	</div>
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">Nama Lengkap</label>
 				    <div class="col-sm-6">
 				      	<input type="text" class="form-control" name="name" id="name" placeholder="Masukan nama" value="<?php echo $data->user_name; ?>">
-				    </div>
-			  	</div>
-			  	<div class="form-group">
-				    <label class="col-sm-2 control-label">Email</label>
-				    <div class="col-sm-6">
-				      	<input type="text" class="form-control" name="email" id="email" placeholder="Masukan email (contoh@email.com)" value="<?php echo $data->user_email; ?>">
-				    </div>
-			  	</div>
-			  	<div class="form-group">
-				    <label class="col-sm-2 control-label">No. Telepon</label>
-				    <div class="col-sm-6">
-				      	<input type="text" class="form-control" name="phone" id="phone" placeholder="Masukan nomor telepon (022xxxx/08xxxxx)" value="<?php echo $data->user_phone; ?>">
 				    </div>
 			  	</div>
 			  	<div class="form-group">
@@ -35,6 +29,39 @@
 				      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat" value="<?php echo $data->user_address; ?>">
 				    </div>
 			  	</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Agama</label>
+					<div class="col-sm-6">
+							<select id="agama" class="form-control" name="agama" id="agama" style="width: 100%" data-placeholder="Pilih level">
+									<option value="">- Pilih Agama -</option>
+									<?php echo $data_agama; ?>
+							</select>
+					</div>
+				</div>
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">Tanggal Lahir</label>
+				    <div class="col-sm-6">
+				      	<input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir" placeholder="Masukan tanggal lahir" value="<?php echo $data->user_tgl_lahir; ?>">
+					</div>
+				</div>
+			  	<div class="form-group">
+				    <label class="col-sm-2 control-label">Email</label>
+				    <div class="col-sm-6">
+				      	<input type="text" class="form-control" name="email" id="email" placeholder="Masukan email (contoh@email.com)" value="<?php echo $data->user_email; ?>">
+				    </div>
+			  	</div>
+			  	<div class="form-group">
+				    <label class="col-sm-2 control-label">Kontak</label>
+				    <div class="col-sm-6">
+				      	<input type="text" class="form-control" name="phone" id="phone" placeholder="Masukan nomor telepon (022xxxx/08xxxxx)" value="<?php echo $data->user_phone; ?>">
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">Mulai Kerja</label>
+				    <div class="col-sm-6">
+				      	<input type="date" class="form-control" name="mulai_kerja" id="mulai_kerja" placeholder="Masukan tanggal mulai kerja" value="<?php echo $data->user_start_work; ?>">
+				    </div>
+				</div>
 					<div class="form-group">
 							<label class="col-sm-2 control-label">Level</label>
 							<div class="col-sm-6">
