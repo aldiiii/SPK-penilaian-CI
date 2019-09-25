@@ -306,6 +306,13 @@
     <script src="<?php echo base_url(); ?>assets/plugins/summernote/dist/summernote.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/plugins/jquery-mask/jquery.mask.js"></script>
 
+    <!-- highchar -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
     <script type="text/javascript">
         var site = '<?php echo base_url() ?>';
 
