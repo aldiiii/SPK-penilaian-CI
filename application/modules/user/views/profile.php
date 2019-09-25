@@ -37,20 +37,20 @@
 									    <table class="table">
 									        <tbody>
 									          	<tr>
-										            <th>Nama</th>
-										            <td><?php echo $name; ?></td>
+													<th>Nama</th>
+													<td><?php echo $name; ?></td>
+												</tr>
+												  <tr>
+										            <th>Alamat</th>
+										            <td><?php echo $address; ?></td>
+									          	</tr>
+									          	<tr>
+										            <th>Kontak/Whatsapp</th>
+										            <td><?php echo $phone; ?></td>
 									          	</tr>
 									          	<tr>
 										            <th>Email</th>
 										            <td><?php echo $email; ?></td>
-									          	</tr>
-									          	<tr>
-										            <th>No. Telepon</th>
-										            <td><?php echo $phone; ?></td>
-									          	</tr>
-									          	<tr>
-										            <th>Alamat</th>
-										            <td><?php echo $address; ?></td>
 									          	</tr>
 									          	<tr>
 										            <th>Status</th>
@@ -127,21 +127,21 @@
 									    </div>
 								  	</div>
 								  	<div class="form-group">
-									    <label class="col-sm-2 control-label">Email</label>
-									    <div class="col-sm-6">
-									      	<input type="text" class="form-control" name="email" id="email" placeholder="Masukan email (contoh@email.com)" value="<?php echo $email; ?>">
+									    <label class="col-sm-2 control-label">Alamat</label>
+									    <div class="col-sm-10">
+									      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat" value="<?php echo $address; ?>">
 									    </div>
 								  	</div>
 								  	<div class="form-group">
-									    <label class="col-sm-2 control-label">No. Telepon</label>
+									    <label class="col-sm-2 control-label">Kontak/Whatsapp</label>
 									    <div class="col-sm-4">
 									      	<input type="text" class="form-control" name="phone" id="phone" placeholder="Masukan nomor telepon (022xxxx/08xxxxx)" value="<?php echo $phone; ?>">
 									    </div>
 								  	</div>
 								  	<div class="form-group">
-									    <label class="col-sm-2 control-label">Alamat</label>
-									    <div class="col-sm-10">
-									      	<input type="text" class="form-control" name="address" id="address" placeholder="Masukan alamat" value="<?php echo $address; ?>">
+									    <label class="col-sm-2 control-label">Email</label>
+									    <div class="col-sm-6">
+									      	<input type="text" class="form-control" name="email" id="email" placeholder="Masukan email (contoh@email.com)" value="<?php echo $email; ?>">
 									    </div>
 								  	</div>
 								  	<div class="form-group">
