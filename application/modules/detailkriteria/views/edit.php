@@ -13,7 +13,7 @@
 			<form  action="<?php echo site_url('detailkriteria/edit/'. $data->kriteria_detail_id.'/'.$kriteria_id); ?>" method="POST" id="addForm" enctype="multipart/form-data">
             <div class="form-group col-sm-12">
                     <label class="control-label" for="nama_detail_kriteria">Nama Detail Kriteria<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="nama_detail_kriteria" id="nama_detail_kriteria" placeholder="Masukan Pertanyaan" value="<?php echo $data->nama_detail_kriteria ?>">
+                    <input type="text" class="form-control" name="nama_detail_kriteria" id="nama_detail_kriteria" placeholder="Masukan Kriteria" value="<?php echo $data->nama_detail_kriteria ?>">
                 </div>
                 <div class="form-group col-sm-12">
                     <input type="hidden" name="submit" value="true">

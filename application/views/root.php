@@ -214,9 +214,27 @@
                                     <!-- Kriteria -->
                                     <li <?php if (in_array($menu, array('kriteria'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-file"></i><span>Kriteria</span></a>
-                                        <ul class="acc-menu" <?php if (in_array($menu, array('vak_question', 'kriteria'))) echo "style='display:block'"; ?>>
+                                        <ul class="acc-menu" <?php if (in_array($menu, array('kriteria'))) echo "style='display:block'"; ?>>
                                             <li <?php if ($menu == 'kriteria') echo "class='active'"; ?>>
-                                                <a href="<?php echo site_url('kriteria'); ?>"><i class="fa fa-angle-right"></i> List Tester</a>
+                                                <a href="<?php echo site_url('kriteria'); ?>"><i class="fa fa-angle-right"></i> Data Kriteria</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- Periode Penilaian -->
+                                    <li <?php if (in_array($menu, array('periodepenilaian'))) echo "class='open active hasChild'"; ?>>
+                                        <a href="javascript:;"><i class="ti ti-file"></i><span>Periode Penilaian</span></a>
+                                        <ul class="acc-menu" <?php if (in_array($menu, array('periodepenilaian'))) echo "style='display:block'"; ?>>
+                                            <li <?php if ($menu == 'periodepenilaian') echo "class='active'"; ?>>
+                                                <a href="<?php echo site_url('periodepenilaian'); ?>"><i class="fa fa-angle-right"></i> Data Periode Penilaian</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- Penilaian -->
+                                    <li <?php if (in_array($menu, array('penilaian'))) echo "class='open active hasChild'"; ?>>
+                                        <a href="javascript:;"><i class="ti ti-file"></i><span>Penilaian</span></a>
+                                        <ul class="acc-menu" <?php if (in_array($menu, array('penilaian'))) echo "style='display:block'"; ?>>
+                                            <li <?php if ($menu == 'penilaian') echo "class='active'"; ?>>
+                                                <a href="<?php echo site_url('penilaian'); ?>"><i class="fa fa-angle-right"></i> Data Penilaian</a>
                                             </li>
                                         </ul>
                                     </li>

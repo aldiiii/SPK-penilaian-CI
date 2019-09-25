@@ -1,27 +1,27 @@
 <ol class="breadcrumb">
     <li class=""><a href="<?php echo site_url(); ?>"><i class="ti ti-home"></i></a></li>
-    <li class=""><a href="<?php echo site_url('kriteria'); ?>">Kriteria</a></li>
-    <li class="active"><a href="#">Tambah</a></li>
+    <li class=""><a href="<?php echo site_url('periodepenilaian'); ?>">Periode Penilaian</a></li>
+    <li class="active"><a href="#">Ubah</a></li>
 </ol>
 
 <div class="container-fluid">
     <div class="panel">
         <div class="panel-heading">
-            <h2 class="panel-title">Tambah Kriteria</h2>
+            <h2 class="panel-title">Ubah Periode Penilaian</h2>
         </div>
         <div class="panel-body">
-            <form action="<?php echo site_url('kriteria/add'); ?>" method="POST" id="addForm" enctype="multipart/form-data">
+            <form action="<?php echo site_url('periodepenilaian/edit/' . $data->periode_id); ?>" method="POST" id="addForm" enctype="multipart/form-data">
                 <div class="form-group col-sm-12">
-                    <label class="control-label" for="kode">Kode<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="kode" id="kode" placeholder="Masukan Kode">
+                    <label class="control-label" for="nama_periode">Nama Periode<span class="form-mark">*</span></label>
+                    <input type="text" class="form-control" name="nama_periode" id="nama_periode" placeholder="Masukan Nama Periode" value="<?php echo $data->nama_periode ?>">
                 </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label" for="nama_kriteria">Nama Kriteria<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="nama_kriteria" id="nama_kriteria" placeholder="Masukan Nama">
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="tanggal_mulai">Tanggal Mulai Periode<span class="form-mark">*</span></label>
+                    <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai" value="<?php echo $data->tanggal_mulai; ?>">
                 </div>
-                <div class="form-group col-sm-12">
-                    <label class="control-label" for="bobot_kriteria">Bobot Kriteria<span class="form-mark">*</span></label>
-                    <input type="text" class="form-control" name="bobot_kriteria" id="bobot_kriteria" placeholder="Masukan Bobot">
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="tanggal_selesai">Tanggal Selesai Periode<span class="form-mark">*</span></label>
+                    <input type="date" class="form-control" name="tanggal_selesai" id="tanggal_selesai"  value="<?php echo $data->tanggal_selesai ?>">
                 </div>
                 <div class="form-group col-sm-12">
                     <input type="hidden" name="submit" value="true">
@@ -37,14 +37,14 @@
     $(document).ready(function() {
         $("#addForm").validate({
             rules: {
-                kode: "required",
-                nama_kriteria: "required",
-                bobot_kriteria: "required",
+                nama_periode: "required",
+                tanggal_mulai: "required",
+                tanggal_selesai: "required",
             },
             messages: {
-                kode: "Nama kriteria tidak boleh kosong",
-                nama_kriteria: "Nama kriteria tidak boleh kosong",
-                bobot_kriteria: "Bobot kriteria tidak boleh kosong",
+                nama_periode: "Nama kriteria tidak boleh kosong",
+                tanggal_mulai: "Tanggal mulai tidak boleh kosong",
+                tanggal_selesai: "Tanggal selesai tidak boleh kosong",
             },
             errorElement: "em",
             errorPlacement: function(error, element) {
