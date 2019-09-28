@@ -88,6 +88,21 @@
             showAssessment();
         });
 
+        $('#penutur_id').on('change', function(){
+            $.ajax({
+                type: "GET",
+                url: '<?php echo base_url("penilaian/validate") ?>',
+                data: {
+                    penutur_id: $('#penutur_id option:selected').val(),
+                    periode_id: $('#periode_id option:selected').val(),                   
+                },
+                dataType:'JSON',
+                success: function(data){
+                    //echo what the server sent back...
+                }
+            });
+        });
+
         function showAssessment() {
             console.log($('#penutur_id option:selected').val());
             console.log($('#periode_id option:selected').val());

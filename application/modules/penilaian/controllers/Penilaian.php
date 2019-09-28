@@ -377,4 +377,8 @@ class Penilaian extends MX_Controller
 			redirect(site_url('periodepenilaian'));
 		}
 	}
+
+	public function validate() {
+		echo "here"; die;
+	}
 }
