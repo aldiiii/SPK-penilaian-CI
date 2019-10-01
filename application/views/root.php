@@ -230,11 +230,14 @@
                                         </ul>
                                     </li>
                                     <!-- Penilaian -->
-                                    <li <?php if (in_array($menu, array('penilaian'))) echo "class='open active hasChild'"; ?>>
+                                    <li <?php if (in_array($menu, array('penilaian', 'calculate'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-file"></i><span>Penilaian</span></a>
-                                        <ul class="acc-menu" <?php if (in_array($menu, array('penilaian'))) echo "style='display:block'"; ?>>
+                                        <ul class="acc-menu" <?php if (in_array($menu, array('penilaian', 'calculate'))) echo "style='display:block'"; ?>>
                                             <li <?php if ($menu == 'penilaian') echo "class='active'"; ?>>
                                                 <a href="<?php echo site_url('penilaian'); ?>"><i class="fa fa-angle-right"></i> Data Penilaian</a>
+                                            </li>
+                                            <li <?php if ($menu == 'calculate') echo "class='active'"; ?>>
+                                                <a href="<?php echo site_url('calculate'); ?>"><i class="fa fa-angle-right"></i> Hitung</a>
                                             </li>
                                         </ul>
                                     </li>
