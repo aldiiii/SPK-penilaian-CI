@@ -37,12 +37,12 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th width="10%">No</th>
-							<th width="35%">Nama Periode</th>
+							<th width="5%">No</th>
+							<th width="30%">Nama Periode</th>
 							<th width="15%">Tanggal Mulai</th>
 							<th width="15%">Tanggal Selesai</th>
 							<th width="15%">Dibuat oleh</th>
-							<th width="35%" class="text-center">Aksi</th>
+							<th width="45%" class="text-center">Aksi</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -62,6 +62,9 @@
 								<td>" . $result['tanggal_selesai'] . "</td>
 								<td class='text-capitalize'>" . $result['user_username'] . "</td>
 								<td class='table-action text-right'>
+									<form action='" . site_url() . "periodepenilaian/calculate/" . $result['periode_id'] . "' >
+										<button class='btn btn-sm btn-primary' data-toggle='tooltip' title='Hitung Penilaian'><i class='fa fa-calculator'></i> Hitung</button>
+									</form>
 									<form action='" . site_url() . "periodepenilaian/edit/" . $result['periode_id'] . "' >
 										<button class='btn btn-sm btn-default-alt' data-toggle='tooltip' title='Ubah'><i class='fa fa-pencil'></i></button>
 									</form>

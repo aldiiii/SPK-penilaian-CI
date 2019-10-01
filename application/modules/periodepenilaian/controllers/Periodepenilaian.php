@@ -280,4 +280,160 @@ class Periodepenilaian extends MX_Controller
 			redirect(site_url('periodepenilaian'));
 		}
 	}
+
+	public function calculate($id) {
+		//auth
+		$this->auth->authorize($this->system['userData'], $this->module, 'delete');
+		$this->urlpattern->resetQueryString();
+
+		$detail = $this->_dataModel->getDetail($this->table, $this->pkey, $id);
+
+		//check data
+		if (!$detail) {
+			echo $this->reject_calculate();
+			exit;
+		}
+
+		$checkAvailable = $this->_dataModel->getLastData($this->prefix.'_calculate', 'periode_id');
+
+		$calculate = array();
+		if ($checkAvailable->num_rows() < 0) { //check available period
+			$where = array('user_level_id' => '3'); //set id penutur
+			$getPenutur = $this->_dataModel->getList($this->prefix . '_sys_user', $where, array('user_id', 'ASC'), '', '');
+			
+			if (!empty($getPenutur)) { //get all user
+				foreach ($getPenutur as $penutur) {
+					$where = array('periode_id' => $checkAvailable->row()->periode_id, 'target_user_id' => $penutur['user_id']);
+					$getNilai = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+
+					if (!empty($getNilai)) { //user already assessment
+						$temp_nilai = array();
+						$total = 0;
+						foreach ($getNilai as $nilai) {
+							
+							$where = array('periode_id' => $checkAvailable->row()->periode_id, 'kriteria_id' => $nilai['kriteria_id']);
+							$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where);
+							$pembagian = number_format(($nilai['score']/$getMax[0]['score']), 1);
+							$hasil_bobot = number_format(($pembagian*$nilai['bobot']), 1);
+
+							$total += $hasil_bobot;
+
+							$data_nilai = array(
+								'kriteria_id' => $nilai['kriteria_id'],
+								'nama' => $nilai['nama'],
+								'score' => $nilai['score'],
+								'bobot' => $nilai['bobot'],
+								'max' => $getMax[0]['score'],
+								'pembagian' => $pembagian,
+								'hasil_bobot' => $hasil_bobot
+							);
+
+							array_push($temp_nilai, $data_nilai);
+						}
+
+						$label = $this->label_calculate($total);
+	
+						$temp_user = array(
+							'user_name' => $penutur['user_name'],
+							'user_id' => $penutur['user_id'],
+							'periode_id' => $checkAvailable->row()->periode_id,
+							'total' => $total,
+							'label' => $label,
+							'nilai' => $temp_nilai,
+						);
+
+						array_push($calculate, $temp_user);
+						
+					} else { //all user not yet assessment
+						echo $this->reject_calculate();
+						exit;
+					}
+				}
+
+			} else { //user not found
+				echo $this->reject_calculate();
+				exit;
+			}
+			
+		} else { //period not found
+			echo $this->reject_calculate();
+			exit;
+		}
+
+		$insert_calculate = $this->insert_calculate($calculate);
+
+		if ($insert_calculate) {
+
+			$msg = "Periode Penilaian berhasil dihitung";
+
+			$this->session->set_flashdata('message', $msg);
+
+			// redirect($this->urlpattern->getRedirect());
+			redirect(site_url('periodepenilaian'));
+		}
+	}
+
+	public function label_calculate($total) {
+		if ($total >= 3.5 && $total <= 4) {
+			return 'Sangat Baik';
+		}
+		if ($total>= 3.0 && $total <= 3.4) {
+			return 'Baik';
+		}
+		if ($total >= 2.5 && $total <= 2.9) {
+			return 'Cukup';
+		}
+		if ($total < 2.5) {
+			return 'Kurang';
+		}
+	}
+
+	public function insert_calculate($data) {
+		// echo json_encode($data); die;
+		$date = date('Y-m-d H:i:s');
+		foreach ($data as $_data) {
+			$value = array(
+				'periode_id' => $_data['periode_id'],
+				'user_id' => $_data['user_id'],
+				'total' => $_data['total'],
+				'label' => $_data['label'],
+				'created_at' => $date,
+				'updated_at' => $date
+			);
+
+			$insert = $this->_dataModel->insert($this->prefix.'_calculate', $value);
+
+			if ($insert) {
+				$caclulate_id = $this->db->insert_id();
+				
+				foreach ($_data['nilai'] as $_nilai) {
+					$detail = array(
+						'calculate_id' => $caclulate_id,
+						'kriteria_id' => $_nilai['kriteria_id'],
+						'score' => $_nilai['score'],
+						'bobot' => $_nilai['bobot'],
+						'max' => $_nilai['max'],
+						'pembagian' => $_nilai['pembagian'],
+						'hasil_bobot' => $_nilai['hasil_bobot'],
+					);
+
+					$insert = $this->_dataModel->insert($this->prefix.'_detail_calculate', $detail);		
+
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public function reject_calculate() {
+		$response = "
+				<script type='text/javascript'>
+					alert('Data belum dapat dikalkulasi, silahkan cek kembali');
+					document.location = '" . $this->urlpattern->getRedirect() . "';
+				</script>
+			";
+
+		return $response;
+	}
 }

@@ -195,6 +195,25 @@ class DataModel extends CI_Model
 		return $res;
 	}
 
+	public function getMax($table, $cond) {
+		$res = false;
+
+		try {
+
+			$this->db->select_max('score');
+			$this->db->where($cond);
+			$query = $this->db->get($table);
+
+			if ($query->num_rows() > 0) {
+				$res = $query->result_array();
+			}
+		} catch (Exception $e) {
+			die("Data Model : " . $e->getMessage());
+		}
+
+		return $res;
+	}
+
 	public function count_data($table)
 	{
 		$this->db->select('*');

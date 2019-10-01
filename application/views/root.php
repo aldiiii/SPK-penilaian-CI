@@ -236,9 +236,6 @@
                                             <li <?php if ($menu == 'penilaian') echo "class='active'"; ?>>
                                                 <a href="<?php echo site_url('penilaian'); ?>"><i class="fa fa-angle-right"></i> Data Penilaian</a>
                                             </li>
-                                            <li <?php if ($menu == 'calculate') echo "class='active'"; ?>>
-                                                <a href="<?php echo site_url('calculate'); ?>"><i class="fa fa-angle-right"></i> Hitung</a>
-                                            </li>
                                         </ul>
                                     </li>
 
