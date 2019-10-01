@@ -21,11 +21,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>C1</td>
-							<td>Kerjasama team</td>
-							<td>0.8</td>
-						</tr>
+						<?php
+
+							if (!$kriteria) {
+								echo "<tr><td colspan='3' align='center'>Data kosong</td></tr>";
+							} else {
+								$no = $number + 1;
+
+								foreach ($kriteria as $_kriteria) {
+									echo "
+										<tr>
+											<td>" . $_kriteria['kode'] . "</td>
+											<td>" . $_kriteria['nama'] . "</td>
+											<td>" . $_kriteria['bobot'] . "</td>
+										</tr>
+										";
+
+									$no++;
+								}
+							}
+
+							?>
 					</tbody>
 				</table>
 			</div>
@@ -213,12 +229,44 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>Tony</td>
-							<td>3.24</td>
-							<td>Sangat Baik</td>
-						</tr>
+						<?php
+
+						if (!$datas) {
+							echo "<tr><td colspan='4' align='center'>Data kosong</td></tr>";
+						} else {
+							$no = $number + 1;
+
+							foreach ($datas as $result) {
+								if ($result['status'] == 1) {
+									$status_label = "Aktif";
+									$label = "success";
+								}  else {
+									$status_label = "Tidak Aktif";
+									$label = "danger";
+								}
+								echo "
+							<tr>
+								<td>" . $result['kode'] . "</td>
+								<td>" . $result['nama'] . "</td>
+								<td>" . $result['bobot'] . "</td>
+								<td><span class='label label-".$label."'>". $status_label ."</span></td>
+								<td class='table-action text-right'>
+									<a class='btn btn-sm btn-primary' href='".base_url()."detailkriteria/index/".$result['kriteria_id']."'>Lihat Detail</a>
+									<form action='" . site_url() . "kriteria/edit/" . $result['kriteria_id'] . "' >
+										<button class='btn btn-sm btn-default-alt' data-toggle='tooltip' title='Ubah'><i class='fa fa-pencil'></i></button>
+									</form>
+									<form action='" . site_url() . "kriteria/delete/" . $result['kriteria_id'] . "'>
+										<button class='btn btn-sm btn-danger btn-delete' data-toggle='tooltip' title='Hapus'><i class='fa fa-trash'></i></button>
+									</form>
+								</td>
+							</tr>
+							";
+
+								$no++;
+							}
+						}
+
+						?>
 					</tbody>
 				</table>
 			</div>

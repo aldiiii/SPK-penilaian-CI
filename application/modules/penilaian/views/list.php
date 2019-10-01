@@ -8,6 +8,60 @@
 
 	<div class="panel">
 		<div class="panel-heading">
+			<h2 class="panel-title">Daftar Nilai</h2>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<tr>
+							<th width="25%">No</th>
+							<th width="25%">Jenjang Nilai</th>
+							<th width="25%">Keterangan</th>
+							<th width="25%">Nilai</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>3.5 - 4</td>
+							<td>Sangat Baik</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>3.0 - 3.4</td>
+							<td>Baik</td>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>2.5 - 2.9</td>
+							<td>Cukup</td>
+							<td>2</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>< 2.5</td>
+							<td>Kurang</td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<div class="row">
+				<div class="col-sm-6">Total <b><?php echo $total; ?></b> items</div>
+				<div class="col-sm-6 text-right">
+					<div class="table-pagging"><?php echo $page_links; ?></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel">
+		<div class="panel-heading">
 			<h2 class="panel-title">Penilaian</h2>
 		</div>
 		<div class="panel-body">

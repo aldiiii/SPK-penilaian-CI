@@ -20,8 +20,8 @@ class Laporan extends MX_Controller
 
 		$this->system 	= $this->config->item('system');
 		$this->prefix 	= $this->db->dbprefix;
-		$this->table 	= $this->prefix . "_periode_penilaian";
-		$this->pkey 	= "periode_id";
+		$this->table 	= $this->prefix . "_calculate";
+		$this->pkey 	= "calcualte_id";
 		$this->join 	= $this->prefix ."_sys_user";
 		$this->fkey 	= "user_id";
 		$this->module 	= "laporan";
@@ -58,38 +58,14 @@ class Laporan extends MX_Controller
 			$this->session->set_flashdata('message', '');
 		}
 
-		//paggination
-		$pagging_uri = 3;
+		$data['periode']	= $this->_dataModel->get_data($this->prefix.'_periode_penilaian', '', '', '', array('periode_id', 'DESC'), '');
 
-		if ($this->uri->segment($pagging_uri)) {
-			$start = $this->uri->segment($pagging_uri);
-		} else {
-			$start = 0;
-		}
-
-		$limit 			= 20;
-		$join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
-		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
-		$data['datas']	= $this->_dataModel->get_data($this->table, '', $limit, $start, array('periode_id', 'DESC'), $join);
-		// echo $this->db->last_query(); die;
-
-		$config['base_url'] 	= site_url('laporan/page/');
-		$config['total_rows'] 	= $this->_dataModel->table_record_count;
-		$config['per_page'] 	= $limit;
-		$config['uri_segment'] 	= $pagging_uri;
-
-		$this->pagination->initialize($config);
-
-		$data['page_links']		= $this->pagination->create_links();
-		$data['total'] 			= $this->_dataModel->table_record_count;
-		$data['number'] 		= $start;
 		$data['alert'] 			= $alert;
-		$data['key'] 			= '';
 		$data['param'] 			= '';
 
-		$this->template->set('title', 'Periode Penilaian');
+		$this->template->set('title', 'Laporan');
 		$this->template->set('menu',  'laporan');
-		$this->template->load('root', 'list', $data);
+		$this->template->load('root', 'search', $data);
 	}
 
 	public function search()
@@ -100,10 +76,11 @@ class Laporan extends MX_Controller
 		$this->urlpattern->setQueryString();
 
 		$data 	= array();
-		$key 	= $this->input->get('key');
 		$param 	= $this->input->get('param');
+		$getLast = $this->_dataModel->getDetail($this->prefix.'_periode_penilaian', 'periode_id', $param);
+		$key = $getLast->nama_periode;
 
-		$search = array($param => $key);
+		$search = array('periode_id' => $param);
 
 		//paggination
 		$pagging_uri = 3;
@@ -115,9 +92,15 @@ class Laporan extends MX_Controller
 		}
 
 		$limit 			= 20;
-		$join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
+		// $join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
 		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
-		$data['datas']	= $this->_dataModel->get_search($this->table, $search, $limit, $start, array('periode_id', 'DESC'), '', $join);
+		// $data['datas']	= $this->_dataModel->get_search($this->table, $search, $limit, $start, array('periode_id', 'DESC'), '', $join);
+
+		$response = array();
+		$getCalculate = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $param, '', '', array('user_id', 'ASC	'));
+		if (!empty($getCalculate)) {}
+
+		$data['kriteria']	= $this->_dataModel->get_data($this->prefix.'_kriteria', '', '', '', array('kriteria_id', 'DESC'));
 
 		$config['base_url'] 	= site_url('laporan/search/');
 		$config['suffix'] 		= "?key=" . $key . "&param=" . $param;

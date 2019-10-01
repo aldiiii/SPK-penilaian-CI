@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
- * Periode Penilaian
+ * Penilaian
  *
  * Updated  2018, 10 June 22:59
  *
@@ -164,9 +164,57 @@ class Penilaian extends MX_Controller
 		}
 
 		$limit 			= 20;
+		$response = array();
+
+		$getPeriode	= $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC	'));
+		if (!empty($getPeriode)) {
+			foreach ($getPeriode as $periode) {
+				$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id']);
+				$getUserPeriode = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), 'target_user_id', '');
+				
+				$detail = array();
+				if (!empty($getUserPeriode)) {
+					foreach ($getUserPeriode as $userperiode) {
+						$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id'], 'target_user_id' => $userperiode['target_user_id']);
+						$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+						$nilai = array();
+		
+						if (!empty($getNilai)) {
+							foreach ($getNilai as $o_res) {
+								$value_option = array(
+									'kriteria_id' => $o_res['kriteria_id'],
+									'score' => $o_res['score'],
+								);
+		
+								array_push($nilai, $value_option);
+							}
+						}
+
+						$user = array(
+							'target_user_name' => $userperiode['target_user_name'],
+							'nilai' => $nilai,
+						);
+
+						array_push($detail, $user);
+					}
+				}
+
+				$value = array(
+					'periode_id' => $periode['periode_id'],
+					'nama_periode' => $periode['nama_periode'],
+					'detail' => $detail
+				);
+
+				array_push($response, $value);
+			}
+		}
+
+		$data['kriteria'] = $this->_dataModel->getList($this->prefix . '_kriteria', '', array('kriteria_id', 'ASC'), '', '');
+		
+		$data['datas'] = $response;
 		// $join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->view .'.'. $this->fkey, 'left');
 		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->view .'.'. $this->fkey2, 'left');
-		$data['datas']	= $this->_dataModel->get_search($this->view, $search, $limit, $start, array('periode_id', 'DESC'), '', '');
+		// $data['datas']	= $this->_dataModel->get_search($this->view, $search, $limit, $start, array('periode_id', 'DESC'), '', '');
 
 		$config['base_url'] 	= site_url('periodepenilaian/search/');
 		$config['suffix'] 		= "?key=" . $key . "&param=" . $param;
@@ -330,8 +378,8 @@ class Penilaian extends MX_Controller
 		$data['penutur'] 	= $penutur;
 		$data['periode'] 	= $periode;
 
-		$this->template->set('title', 'Tambah Periode Penilaian');
-		$this->template->set('menu',  'penilaian');
+		$this->template->set('title', 'Tambah Penilaian');
+		$this->template->set('menu',  'add_penilaian');
 		$this->template->load('root', 'add', $data);
 	}
 
@@ -387,7 +435,7 @@ class Penilaian extends MX_Controller
 
 		$data['data'] 		= $detail;
 
-		$this->template->set('title', 'Ubah Periode Penilaian');
+		$this->template->set('title', 'Ubah Penilaian');
 		$this->template->set('menu',  'penilaian');
 		$this->template->load('root', 'edit', $data);
 	}

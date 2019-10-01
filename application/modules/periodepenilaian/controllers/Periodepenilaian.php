@@ -297,54 +297,85 @@ class Periodepenilaian extends MX_Controller
 		$checkAvailable = $this->_dataModel->getLastData($this->prefix.'_calculate', 'periode_id');
 
 		$calculate = array();
-		if ($checkAvailable->num_rows() < 0) { //check available period
+		if ($checkAvailable->num_rows() === 0) { //check available period
 			$where = array('user_level_id' => '3'); //set id penutur
 			$getPenutur = $this->_dataModel->getList($this->prefix . '_sys_user', $where, array('user_id', 'ASC'), '', '');
 			
 			if (!empty($getPenutur)) { //get all user
 				foreach ($getPenutur as $penutur) {
-					$where = array('periode_id' => $checkAvailable->row()->periode_id, 'target_user_id' => $penutur['user_id']);
-					$getNilai = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
 
-					if (!empty($getNilai)) { //user already assessment
-						$temp_nilai = array();
+					$getKriteria = $this->_dataModel->getList($this->prefix . '_kriteria', '', array('kriteria_id', 'ASC'), '', '');
+					
+					if (!empty($getKriteria)) {
+						$data_nilai = array();
 						$total = 0;
-						foreach ($getNilai as $nilai) {
-							
-							$where = array('periode_id' => $checkAvailable->row()->periode_id, 'kriteria_id' => $nilai['kriteria_id']);
-							$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where);
-							$pembagian = number_format(($nilai['score']/$getMax[0]['score']), 1);
-							$hasil_bobot = number_format(($pembagian*$nilai['bobot']), 1);
+						foreach ($getKriteria as $_kriteria) {
+							$where = array('periode_id' => $detail->periode_id, 'target_user_id' => $penutur['user_id'], 'kriteria_id' => $_kriteria['kriteria_id']);
+							$getNilai = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
 
-							$total += $hasil_bobot;
+							$raw_score = 0;
+							if (empty($getNilai)) { //user already assessment
+								echo $this->reject_calculate();
+								exit;
+							} else { //all user not yet assessment
+								foreach ($getNilai as $nilai) {
+									
+									$raw_score += $nilai['score'];
+									// $pembagian = number_format(($nilai['score']/$getMax[0]['score']), 1);
+									// $hasil_bobot = number_format(($pembagian*$nilai['bobot']), 1);
 
-							$data_nilai = array(
-								'kriteria_id' => $nilai['kriteria_id'],
-								'nama' => $nilai['nama'],
-								'score' => $nilai['score'],
-								'bobot' => $nilai['bobot'],
+									// $total += $hasil_bobot;
+
+									// $data_nilai = array(
+									// 	'kriteria_id' => $nilai['kriteria_id'],
+									// 	'nama' => $nilai['nama'],
+									// 	'score' => $nilai['score'],
+									// 	'bobot' => $nilai['bobot'],
+									// 	'max' => $getMax[0]['score'],
+									// 	'pembagian' => $pembagian,
+									// 	'hasil_bobot' => $hasil_bobot
+									// );
+
+									// array_push($temp_nilai, $data_nilai);
+								}
+
+								$score = number_format(($raw_score/count($getNilai)),1);
+								$where = array('periode_id' => $detail->periode_id, 'kriteria_id' => $_kriteria['kriteria_id']);
+								$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where);
+								$pembagian = number_format(($score/$getMax[0]['score']), 1);
+								$hasil_bobot = number_format(($pembagian*$_kriteria['bobot']), 1);
+								$total += $hasil_bobot;
+							}
+
+
+							$temp_nilai = array(
+								'kriteria_id' => $_kriteria['kriteria_id'],
+								'nama' => $_kriteria['nama'],
+								'bobot' => $_kriteria['bobot'],
+								'score' => $score,
 								'max' => $getMax[0]['score'],
 								'pembagian' => $pembagian,
 								'hasil_bobot' => $hasil_bobot
 							);
 
-							array_push($temp_nilai, $data_nilai);
+							array_push($data_nilai, $temp_nilai);
 						}
 
+						$total = number_format($total, 1);
 						$label = $this->label_calculate($total);
-	
+			
 						$temp_user = array(
 							'user_name' => $penutur['user_name'],
 							'user_id' => $penutur['user_id'],
-							'periode_id' => $checkAvailable->row()->periode_id,
+							'periode_id' => $detail->periode_id,
 							'total' => $total,
 							'label' => $label,
-							'nilai' => $temp_nilai,
+							'nilai' => $data_nilai,
 						);
 
 						array_push($calculate, $temp_user);
-						
-					} else { //all user not yet assessment
+
+					}  else { //kriteria not found
 						echo $this->reject_calculate();
 						exit;
 					}
@@ -389,7 +420,6 @@ class Periodepenilaian extends MX_Controller
 	}
 
 	public function insert_calculate($data) {
-		// echo json_encode($data); die;
 		$date = date('Y-m-d H:i:s');
 		foreach ($data as $_data) {
 			$value = array(
@@ -410,6 +440,7 @@ class Periodepenilaian extends MX_Controller
 					$detail = array(
 						'calculate_id' => $caclulate_id,
 						'kriteria_id' => $_nilai['kriteria_id'],
+						'periode_id' => $_data['periode_id'],
 						'score' => $_nilai['score'],
 						'bobot' => $_nilai['bobot'],
 						'max' => $_nilai['max'],
@@ -429,7 +460,7 @@ class Periodepenilaian extends MX_Controller
 	public function reject_calculate() {
 		$response = "
 				<script type='text/javascript'>
-					alert('Data belum dapat dikalkulasi, silahkan cek kembali');
+					alert('Data tidak dapat dikalkulasi, silahkan cek kembali');
 					document.location = '" . $this->urlpattern->getRedirect() . "';
 				</script>
 			";
