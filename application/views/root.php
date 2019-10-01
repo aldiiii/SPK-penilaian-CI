@@ -238,6 +238,16 @@
                                             </li>
                                         </ul>
                                     </li>
+
+                                    <!-- Laporan -->
+                                    <li <?php if (in_array($menu, array('laporan'))) echo "class='open active hasChild'"; ?>>
+                                        <a href="javascript:;"><i class="ti ti-file"></i><span>Laporan</span></a>
+                                        <ul class="acc-menu" <?php if (in_array($menu, array('laporan'))) echo "style='display:block'"; ?>>
+                                            <li <?php if ($menu == 'laporan') echo "class='active'"; ?>>
+                                                <a href="<?php echo site_url('laporan'); ?>"><i class="fa fa-angle-right"></i> Data Laporan</a>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
