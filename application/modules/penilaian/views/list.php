@@ -34,51 +34,46 @@
 				</div>
 			</div>
 			<div class="table-responsive">
-				<table class="table">
-					<thead>
-						<tr>
-							<th width="10%">No</th>
-							<th width="35%">Nama Periode</th>
-							<th width="15%">Tanggal Mulai</th>
-							<th width="15%">Tanggal Selesai</th>
-							<th width="15%">Dibuat oleh</th>
-							<th width="35%" class="text-center">Aksi</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-
-						if (!$datas) {
-							echo "<tr><td colspan='6' align='center'>Data kosong</td></tr>";
-						} else {
-							$no = $number + 1;
-
-							foreach ($datas as $result) {
-								echo "
+				<?php if (!$datas) {
+					echo "<tr><td colspan='6' align='center'>Data kosong</td></tr>";
+				} else {
+					foreach ($datas as $result) {
+						echo "<h5>".$result['nama_periode']."</h5>";
+					?>
+					<table class="table">
+						<thead>
 							<tr>
-								<td>" . $no . "</td>
-								<td>" . $result['nama_periode'] . "</td>
-								<td>" . $result['tanggal_mulai'] . "</td>
-								<td>" . $result['tanggal_selesai'] . "</td>
-								<td class='text-capitalize'>" . $result['user_username'] . "</td>
-								<td class='table-action text-right'>
-									<form action='" . site_url() . "penilaian/edit/" . $result['periode_id'] . "' >
-										<button class='btn btn-sm btn-default-alt' data-toggle='tooltip' title='Ubah'><i class='fa fa-pencil'></i></button>
-									</form>
-									<form action='" . site_url() . "penilaian/delete/" . $result['periode_id'] . "'>
-										<button class='btn btn-sm btn-danger btn-delete' data-toggle='tooltip' title='Hapus'><i class='fa fa-trash'></i></button>
-									</form>
-								</td>
+								<th width="35%">Nama</th>
+								<?php 
+									if (!empty($kriteria)) {
+										foreach ($kriteria as $k) {
+											echo '<th>'.$k['nama'].'</th>';
+										}
+									}
+								?>
 							</tr>
-							";
+						</thead>
+						<tbody>
+								<?php if (!empty($result['detail'])) {
+									foreach ($result['detail'] as $detail) {
+										echo "
+									<tr>
+										<td>" . $detail['target_user_name'] . "</td>";
+										if (!empty($detail['nilai'])) {
+											foreach ($detail['nilai'] as $nilai) {
+												echo "<td>".$nilai['score']."</td>";
+											}
+										}
+									
+									echo "</tr>";
+									}
+								}
 
-								$no++;
-							}
-						}
-
-						?>
-					</tbody>
-				</table>
+							?>
+						</tbody>
+					</table>
+				<?php }
+				} ?>
 			</div>
 		</div>
 		<div class="panel-footer">

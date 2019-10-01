@@ -71,7 +71,55 @@ class Penilaian extends MX_Controller
 		$limit 			= 20;
 		// $join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
 		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
-		$data['datas']	= $this->_dataModel->get_data($this->view, '', $limit, $start, array('periode_id', 'DESC'), '');
+		$response = array();
+
+		$getPeriode	= $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC	'));
+		if (!empty($getPeriode)) {
+			foreach ($getPeriode as $periode) {
+				$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id']);
+				$getUserPeriode = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), 'target_user_id', '');
+				
+				$detail = array();
+				if (!empty($getUserPeriode)) {
+					foreach ($getUserPeriode as $userperiode) {
+						$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id'], 'target_user_id' => $userperiode['target_user_id']);
+						$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+						$nilai = array();
+		
+						if (!empty($getNilai)) {
+							foreach ($getNilai as $o_res) {
+								$value_option = array(
+									'kriteria_id' => $o_res['kriteria_id'],
+									'score' => $o_res['score'],
+								);
+		
+								array_push($nilai, $value_option);
+							}
+						}
+
+						$user = array(
+							'target_user_name' => $userperiode['target_user_name'],
+							'nilai' => $nilai,
+						);
+
+						array_push($detail, $user);
+					}
+				}
+
+				$value = array(
+					'periode_id' => $periode['periode_id'],
+					'nama_periode' => $periode['nama_periode'],
+					'detail' => $detail
+				);
+
+				array_push($response, $value);
+			}
+		}
+
+		$data['kriteria'] = $this->_dataModel->getList($this->prefix . '_kriteria', '', array('kriteria_id', 'ASC'), '', '');
+		
+		$data['datas'] = $response;
+		// $data['datas']	= $this->_dataModel->get_data($this->view, '', $limit, $start, array('periode_id', 'DESC'), '');
 		// echo $this->db->last_query(); die;
 
 		$config['base_url'] 	= site_url('periodepenilaian/page/');
@@ -376,9 +424,5 @@ class Penilaian extends MX_Controller
 			// redirect($this->urlpattern->getRedirect());
 			redirect(site_url('periodepenilaian'));
 		}
-	}
-
-	public function validate() {
-		echo "here"; die;
 	}
 }

@@ -448,7 +448,7 @@ CREATE TABLE `spk_v_penilaian` (
 --
 DROP TABLE IF EXISTS `spk_v_penilaian`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `spk_v_penilaian`  AS  select `penilaian_id` AS `penilaian_id`,`periode_id` AS `periode_id`,`user_id` AS `user_id`,`target_user_id` AS `target_user_id`,`kriteria_id` AS `kriteria_id`,`score` AS `score`,`created_at` AS `created_at`,`updated_at` AS `updated_at`,`spk_sys_user`.`user_name` AS `user_name`,`spk_sys_user_alias1`.`user_name` AS `target_user_name` from ((`spk_penilaian` join `spk_sys_user` on((`user_id` = `spk_sys_user`.`user_id`))) join `spk_sys_user` `spk_sys_user_alias1` on((`target_user_id` = `spk_sys_user_alias1`.`user_id`))) ;
+CREATE VIEW `spk_v_penilaian`  AS  select `penilaian_id` AS `penilaian_id`,`periode_id` AS `periode_id`,`user_id` AS `user_id`,`target_user_id` AS `target_user_id`,`kriteria_id` AS `kriteria_id`,`score` AS `score`,`created_at` AS `created_at`,`updated_at` AS `updated_at`,`spk_sys_user`.`user_name` AS `user_name`,`spk_sys_user_alias1`.`user_name` AS `target_user_name` from ((`spk_penilaian` join `spk_sys_user` on((`user_id` = `spk_sys_user`.`user_id`))) join `spk_sys_user` `spk_sys_user_alias1` on((`target_user_id` = `spk_sys_user_alias1`.`user_id`))) ;
 
 --
 -- Indexes for dumped tables
