@@ -194,6 +194,7 @@
                                     <li <?php if ($menu == 'dashboard') echo "class='active'"; ?>>
                                         <a href="<?php echo site_url('dashboard'); ?>"><i class="ti ti-home"></i><span>Beranda</span></a>
                                     </li>
+                                    <?php if($this->auth->user()['level'] == 1) { ?>
                                     <!-- Menu System -->
                                     <li <?php if (in_array($menu, array('level', 'user', 'module', 'task', 'role'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-settings"></i><span>Sistem</span></a>
@@ -215,6 +216,7 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <?php } ?>
                                     <!-- Kriteria -->
                                     <li <?php if (in_array($menu, array('kriteria'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-file"></i><span>Kriteria</span></a>

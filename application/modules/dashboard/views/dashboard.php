@@ -27,7 +27,7 @@
 			</div>
 		</div>
 	</div>
-
+	<?php if($this->auth->user()['level'] != 3) { ?>
 	<div class="panel">
 		<div class="panel-body">
 			<div class="row">
@@ -57,6 +57,7 @@
 			<canvas id="myChart"></canvas>
 		</div>
 	</div>
+	<?php } ?>
 </div>
 
 <script type="text/javascript">
