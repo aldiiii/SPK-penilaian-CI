@@ -30,43 +30,19 @@ class Dashboard extends MX_Controller {
 
 		$data 	= array();
 
+		$param = '';
 		$search = '';
+		if ($this->input->get('param')) {
+			$param 	= $this->input->get('param');
+			$search = array('user_id' => $param);
+		}
 
-		$data['penutur'] = $this->_dataModel->count_data($this->prefix.'_sys_user', 'user_level_id = 3');
-		$data['kriteria'] = $this->_dataModel->count_data($this->prefix.'_kriteria');
-		$data['nilai'] = $this->_dataModel->count_data($this->prefix.'_calculate');
-		
-		// $response = array();
-		// $getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('periode_id', 'ASC	'));
-		// if (!empty($getPeriode)) {
-		// 	foreach ($getPeriode as $periode) {
-		// 		$nilai = array();
-		// 		$calculate =  $this->_dataModel->get_data($this->prefix . '_v_calculate', $search, '', '', array('user_id', 'ASC	'),'','','');
-				
-		// 		if (!empty($calculate)) {
-		// 			foreach ($calculate as $c) {
-	
-		// 				$nilai_temp = (int) $c['total'];
-	
-		// 				array_push($nilai, $nilai_temp);
-		// 			}
-		// 		}
-
-		// 		$periode_temp = array(
-		// 			'nama' => $periode['nama_periode'], 
-		// 			'data' => $nilai
-		// 		);
-
-		// 		array_push($response, $periode_temp);
-		// 	}
-			
-		// }
-
-		// $data['data'] = json_encode($response);
-
+		$data['jumlah_penutur'] = $this->_dataModel->count_data($this->prefix.'_sys_user', 'user_level_id = 3');
+		$data['jumlah_kriteria'] = $this->_dataModel->count_data($this->prefix.'_kriteria');
+		$data['jumlah_nilai'] = $this->_dataModel->count_data($this->prefix.'_calculate');
 
 		$periode = [];
-		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('periode_id', 'ASC	'));
+		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC'));
 		if (!empty($getPeriode)) {
 			foreach ($getPeriode as $p) {
 				$periode[] = $p['nama_periode'];
@@ -82,10 +58,32 @@ class Dashboard extends MX_Controller {
 					$nilai_chart[] = (float) number_format($ac['nilai'], 1);
 				}
 			}
+		} else {
+			$calculate =  $this->_dataModel->get_data($this->prefix . '_v_calculate', $search, '', '', array('periode_id', 'ASC	'));
+				
+			if (!empty($calculate)) {
+				foreach ($calculate as $ac) {
+
+					$nilai_chart[] = (float) number_format($ac['total'], 1);
+				}
+			}
 		}
 
 		$data['periode'] = $periode;
 		$data['nilai_chart'] = $nilai_chart;
+
+		$getPenutur = $this->_dataModel->getList($this->prefix.'_sys_user', 'user_level_id = 3', array('user_name', 'ASC'));
+		$penutur = "";
+
+		if ($getPenutur) {
+			foreach ($getPenutur as $result) { 
+				$selected = ($result['user_id'] == $param) ? 'selected' : '';
+				$penutur .= "<option value='". $result['user_id'] ."' $selected>". $result['user_name'] ."</option>";
+			}
+		}
+
+		$data['penutur'] 	= $penutur;
+
 		$this->template->set('title', 	'Beranda');
 		$this->template->set('menu',  	'dashboard');
 		$this->template->load('root', 	'dashboard', $data);
