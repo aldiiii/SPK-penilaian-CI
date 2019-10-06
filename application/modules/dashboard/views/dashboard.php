@@ -9,33 +9,34 @@
 			<div class="info-tile tile-orange">
 				<div class="tile-icon"><i class="ti ti-user"></i></div>
 				<div class="tile-heading"><span>Penutur</span></div>
-				<div class="tile-body"><span>1</span></div>
+				<div class="tile-body"><span><?php echo $penutur ?></span></div>
 			</div>
 		</div>
 		<div class="col-md-4">
 			<div class="info-tile tile-success">
 				<div class="tile-icon"><i class="ti ti-view-list-alt"></i></div>
 				<div class="tile-heading"><span>Kriteria</span></div>
-				<div class="tile-body"><span>1</span></div>
+				<div class="tile-body"><span><?php echo $kriteria ?></span></div>
 			</div>
 		</div>
 		<div class="col-md-4">
 			<div class="info-tile tile-info">
 				<div class="tile-icon"><i class="ti ti-pulse"></i></div>
 				<div class="tile-heading"><span>Nilai</span></div>
-				<div class="tile-body"><span>1</span></div>
+				<div class="tile-body"><span><?php echo $nilai ?></span></div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-8">
-		<ul class="d-inline-flex">
-  <li class="mr-40">< 2.5 Kurang</li>
-  <li class="mr-40">2.5 - 2.9 Cukup</li>
-  <li class="mr-40">3.0 - 3.4 Baik</li>
-  <li>3.5 - 4 Sangat Baik</li>
-</ul>
+			<ul class="d-inline-flex">
+				<li class="mr-40">
+					< 2.5 Kurang</li> <li class="mr-40">2.5 - 2.9 Cukup
+				</li>
+				<li class="mr-40">3.0 - 3.4 Baik</li>
+				<li>3.5 - 4 Sangat Baik</li>
+			</ul>
 		</div>
 		<div class="col-sm-4 text-right">
 			<div class="form-group">
@@ -47,88 +48,71 @@
 		</div>
 	</div>
 
-	<div id="highchar">
-		
+	<div class="panel">
+		<div class="panel-body">
+			<canvas id="myChart"></canvas>
+		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		var ctx = document.getElementById('myChart').getContext("2d");
+		var periode = <?php echo json_encode($periode) ?>;
 
-		Highcharts.chart('highchar', {
+		var nilai_chart = <?php echo json_encode($nilai_chart) ?>;
 
-			title: {
-				text: 'Data Penilain Penutur'
-			},
-
-			subtitle: {
-				text: 'Sistem Penilaian Penutur'
-			},
-
-			yAxis: {
-				title: {
-					text: 'Nilai'
-				}
-			},
-			// xAxis: {
-			// 	categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-			// 	'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-			// 	],
-			// 	min: 0,
-			// 	max: 11
-			// },
-			// legend: {
-			// 	layout: 'vertical',
-			// 	align: 'right',
-			// 	verticalAlign: 'middle'
-			// },
-
-			// plotOptions: {
-			// 	series: {
-			// 		label: {
-			// 			connectorAllowed: false
-			// 		},
-			// 		pointStart: 2010
-			// 	}
-			// },
-
-			series: [{
-				name: 'kriteria 1',
-				data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-			}, {
-				name: 'kriteria 2',
-				data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-			}, {
-				name: 'kriteria 3',
-				data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-			}, {
-				name: 'kriteria 4',
-				data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-			}, {
-				name: 'kriteria 5',
-				data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-			}],
-
-			responsive: {
-				rules: [{
-					condition: {
-						maxWidth: 500
-					},
-					chartOptions: {
-						legend: {
-							layout: 'horizontal',
-							align: 'center',
-							verticalAlign: 'bottom'
-						}
-					}
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: periode,
+				datasets: [{
+					label: "Nilai",
+					borderColor: "#80b6f4",
+					pointBorderColor: "#80b6f4",
+					pointBackgroundColor: "#80b6f4",
+					pointHoverBackgroundColor: "#80b6f4",
+					pointHoverBorderColor: "#80b6f4",
+					pointBorderWidth: 10,
+					pointHoverRadius: 10,
+					pointHoverBorderWidth: 1,
+					pointRadius: 3,
+					fill: false,
+					borderWidth: 4,
+					data: nilai_chart
 				}]
+			},
+			options: {
+				legend: {
+					position: "bottom"
+				},
+				scales: {
+					yAxes: [{
+						ticks: {
+							fontColor: "rgba(0,0,0,0.5)",
+							fontStyle: "bold",
+							beginAtZero: true,
+							maxTicksLimit: 5,
+							padding: 20
+						},
+						gridLines: {
+							drawTicks: false,
+							display: false
+						}
+
+					}],
+					xAxes: [{
+						gridLines: {
+							zeroLineColor: "transparent"
+						},
+						ticks: {
+							padding: 20,
+							fontColor: "rgba(0,0,0,0.5)",
+							fontStyle: "bold"
+						}
+					}]
+				}
 			}
 		});
 	});
-
-	function getUser() {
-		const data = document.getElementById('param').value;
-		
-		console.log(data);
-	}
 </script>

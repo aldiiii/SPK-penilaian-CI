@@ -439,6 +439,7 @@ class Periodepenilaian extends MX_Controller
 				foreach ($_data['nilai'] as $_nilai) {
 					$detail = array(
 						'calculate_id' => $caclulate_id,
+						'user_id' => $_data['user_id'],
 						'kriteria_id' => $_nilai['kriteria_id'],
 						'periode_id' => $_data['periode_id'],
 						'score' => $_nilai['score'],

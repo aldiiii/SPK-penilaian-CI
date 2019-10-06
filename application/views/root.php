@@ -56,6 +56,10 @@
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/summernote/dist/summernote.css">
 
+    <?php if ($menu == 'dashboard') { ?>
+        <link type="text/css" href="<?php echo base_url(); ?>assets/css/Chart.min.css" rel="stylesheet">
+    <?php } ?>
+
 </head>
 
 <body class="animated-content">
@@ -319,11 +323,9 @@
     <script src="<?php echo base_url(); ?>assets/plugins/summernote/dist/summernote.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/plugins/jquery-mask/jquery.mask.js"></script>
 
-    <!-- highchar -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/series-label.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <?php if ($menu == 'dashboard') { ?>
+        <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/Chart.min.js"></script>
+    <?php } ?>
 
 
     <script type="text/javascript">

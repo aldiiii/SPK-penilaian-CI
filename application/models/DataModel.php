@@ -214,10 +214,14 @@ class DataModel extends CI_Model
 		return $res;
 	}
 
-	public function count_data($table)
+	public function count_data($table, $where = null)
 	{
 		$this->db->select('*');
 		$this->db->from($table);
+		if ($where) {
+			$this->db->where($where);
+			
+		}
 
 		return $this->db->get()->num_rows();
 	}
@@ -230,5 +234,36 @@ class DataModel extends CI_Model
 		$this->db->limit(1);
 
 		return $this->db->get();
+	}
+
+	public function getExist($table, $where, $order)
+	{
+		$this->db->select('*');
+		$this->db->from($table);
+		$this->db->where($where);
+		$this->db->order_by($order);
+		
+		$this->db->limit(1);
+
+		return $this->db->get();
+	}
+
+	public function getMaxList($table, $field, $where, $order, $group)
+	{
+		$this->db->select_max($field);
+		$this->db->from($table);
+		$this->db->where($where);
+		$this->db->order_by($order);
+		$this->db->group_by($group);
+		
+		return $this->db->get();
+	}
+
+	public function getAvgList($table, $field, $where, $order, $group)
+	{
+		$where = ($where != '') ? 'WHERE '. $where : '';
+		$query = $this->db->query("SELECT periode_id, AVG($field) as nilai FROM $table $where GROUP BY $group ORDER BY $order ASC");
+		
+		return $query->result_array();
 	}
 }

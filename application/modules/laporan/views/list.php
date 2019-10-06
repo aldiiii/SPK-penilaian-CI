@@ -62,28 +62,39 @@
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
-				<table class="table">
-					<thead>
-						<tr>
-							<th width="20%">Alternatif / Kriteria</th>
-							<th width="10%">C1</th>
-							<th width="10%">C2</th>
-							<th width="10%">C3</th>
-							<th width="10%">C4</th>
-							<th width="10%">C5</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Tony Kusnadi</td>
-							<td>3.24</td>
-							<td>4</td>
-							<td>3.14</td>
-							<td>3.14</td>
-							<td>4</td>
-						</tr>
-					</tbody>
-				</table>
+				<?php if (!$alternatif_kriteria) {
+					echo "<tr><td colspan='6' align='center'>Data kosong</td></tr>";
+				} else { ?>
+					<table class="table">
+						<thead>
+							<tr>
+								<th width="35%">Nama</th>
+								<?php 
+									if (!empty($kriteria)) {
+										foreach ($kriteria as $k) {
+											echo '<th>'.$k['nama'].'</th>';
+										}
+									}
+								?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($alternatif_kriteria as $result) { ?>
+							<tr>
+								<td><?php echo $result['user_name']; ?></td>
+								<?php if (!empty($result['detail_nilai'])) {
+									foreach ($result['detail_nilai'] as $detail) {
+										echo "<td>".$detail['score']."</td>";
+									}
+								} else {
+									echo "<td colspan='5'>Data Tidak Ada</td>";
+								}
+								?>
+							<tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				<?php } ?>
 			</div>
 		</div>
 		<div class="panel-footer">
@@ -105,22 +116,32 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th width="20%">Nilai Maksimal / Kriteria</th>
-							<th width="10%">C1</th>
-							<th width="10%">C2</th>
-							<th width="10%">C3</th>
-							<th width="10%">C4</th>
-							<th width="10%">C5</th>
+							<?php 
+								if (!empty($kriteria)) {
+									foreach ($kriteria as $k) {
+										echo '<th>'.$k['nama'].'</th>';
+									}
+								}
+							?>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>Nilai Maksimal</td>
-							<td>3.24</td>
-							<td>4</td>
-							<td>3.14</td>
-							<td>3.14</td>
-							<td>4</td>
+						<?php
+							if ($max->num_rows() == 0) {
+								echo "<tr><td colspan='5' align='center'>Data kosong</td></tr>";
+							} else {
+
+								foreach ($max->result() as $_max) {
+									echo "
+											<td>" . $_max->score . "</td>
+										";
+
+									$no++;
+								}
+							}
+
+							?>
 						</tr>
 					</tbody>
 				</table>
@@ -142,28 +163,39 @@
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
-				<table class="table">
-					<thead>
-						<tr>
-							<th width="20%">Alternatif / Kriteria</th>
-							<th width="10%">C1</th>
-							<th width="10%">C2</th>
-							<th width="10%">C3</th>
-							<th width="10%">C4</th>
-							<th width="10%">C5</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Tony</td>
-							<td>3.24</td>
-							<td>4</td>
-							<td>3.14</td>
-							<td>3.14</td>
-							<td>4</td>
-						</tr>
-					</tbody>
-				</table>
+				<?php if (!$alternatif_kriteria) {
+					echo "<tr><td colspan='6' align='center'>Data kosong</td></tr>";
+				} else { ?>
+					<table class="table">
+						<thead>
+							<tr>
+								<th width="35%">Nama</th>
+								<?php 
+									if (!empty($kriteria)) {
+										foreach ($kriteria as $k) {
+											echo '<th>'.$k['nama'].'</th>';
+										}
+									}
+								?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($alternatif_kriteria as $result) { ?>
+							<tr>
+								<td><?php echo $result['user_name']; ?></td>
+								<?php if (!empty($result['detail_nilai'])) {
+									foreach ($result['detail_nilai'] as $detail) {
+										echo "<td>".$detail['pembagian']."</td>";
+									}
+								} else {
+									echo "<td colspan='5'>Data Tidak Ada</td>";
+								}
+								?>
+							<tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				<?php } ?>
 			</div>
 		</div>
 		<div class="panel-footer">
@@ -182,28 +214,39 @@
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
-				<table class="table">
-					<thead>
-						<tr>
-							<th width="20%">Alternatif / Kriteria</th>
-							<th width="10%">C1</th>
-							<th width="10%">C2</th>
-							<th width="10%">C3</th>
-							<th width="10%">C4</th>
-							<th width="10%">C5</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Tony</td>
-							<td>3.24</td>
-							<td>4</td>
-							<td>3.14</td>
-							<td>3.14</td>
-							<td>4</td>
-						</tr>
-					</tbody>
-				</table>
+				<?php if (!$alternatif_kriteria) {
+					echo "<tr><td colspan='6' align='center'>Data kosong</td></tr>";
+				} else { ?>
+					<table class="table">
+						<thead>
+							<tr>
+								<th width="35%">Nama</th>
+								<?php 
+									if (!empty($kriteria)) {
+										foreach ($kriteria as $k) {
+											echo '<th>'.$k['nama'].'</th>';
+										}
+									}
+								?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($alternatif_kriteria as $result) { ?>
+							<tr>
+								<td><?php echo $result['user_name']; ?></td>
+								<?php if (!empty($result['detail_nilai'])) {
+									foreach ($result['detail_nilai'] as $detail) {
+										echo "<td>".$detail['hasil_bobot']."</td>";
+									}
+								} else {
+									echo "<td colspan='5'>Data Tidak Ada</td>";
+								}
+								?>
+							<tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				<?php } ?>
 			</div>
 		</div>
 		<div class="panel-footer">
@@ -223,7 +266,7 @@
 					<thead>
 						<tr>
 							<th width="10%">No</th>
-							<th width="40%">Alternatif</th>
+							<th width="40%">Nama</th>
 							<th width="20%">Hasil Penilaian</th>
 							<th width="30%">Keterangan</th>
 						</tr>
@@ -237,28 +280,12 @@
 							$no = $number + 1;
 
 							foreach ($datas as $result) {
-								if ($result['status'] == 1) {
-									$status_label = "Aktif";
-									$label = "success";
-								}  else {
-									$status_label = "Tidak Aktif";
-									$label = "danger";
-								}
 								echo "
 							<tr>
-								<td>" . $result['kode'] . "</td>
-								<td>" . $result['nama'] . "</td>
-								<td>" . $result['bobot'] . "</td>
-								<td><span class='label label-".$label."'>". $status_label ."</span></td>
-								<td class='table-action text-right'>
-									<a class='btn btn-sm btn-primary' href='".base_url()."detailkriteria/index/".$result['kriteria_id']."'>Lihat Detail</a>
-									<form action='" . site_url() . "kriteria/edit/" . $result['kriteria_id'] . "' >
-										<button class='btn btn-sm btn-default-alt' data-toggle='tooltip' title='Ubah'><i class='fa fa-pencil'></i></button>
-									</form>
-									<form action='" . site_url() . "kriteria/delete/" . $result['kriteria_id'] . "'>
-										<button class='btn btn-sm btn-danger btn-delete' data-toggle='tooltip' title='Hapus'><i class='fa fa-trash'></i></button>
-									</form>
-								</td>
+								<td>" . $no . "</td>
+								<td>" . $result['user_name'] . "</td>
+								<td>" . $result['total'] . "</td>
+								<td>" . $result['label'] . "</td>
 							</tr>
 							";
 

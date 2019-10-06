@@ -94,13 +94,44 @@ class Laporan extends MX_Controller
 		$limit 			= 20;
 		// $join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
 		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
-		// $data['datas']	= $this->_dataModel->get_search($this->table, $search, $limit, $start, array('periode_id', 'DESC'), '', $join);
+		$data['datas']	= $this->_dataModel->get_data($this->prefix . '_v_calculate', $search, '', '', array('user_id', 'ASC'));
 
 		$response = array();
-		$getCalculate = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $param, '', '', array('user_id', 'ASC	'));
-		if (!empty($getCalculate)) {}
+		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('user_id', 'ASC	'));
+		if (!empty($getPeriode)) {
+			$userCalculate =  $this->_dataModel->get_data($this->prefix . '_v_detail_calculate', $search, '', '', array('user_id', 'ASC	'),'','','user_id');
+			
+			if (!empty($userCalculate)) {
+				foreach ($userCalculate as $uc) {
+					$nilai = array();
+					$search = array('periode_id' => $param, 'user_id' => $uc['user_id']);
 
-		$data['kriteria']	= $this->_dataModel->get_data($this->prefix.'_kriteria', '', '', '', array('kriteria_id', 'DESC'));
+					$nilaiCalculate =  $this->_dataModel->get_data($this->prefix . '_v_detail_calculate', $search, '', '', array('user_id', 'ASC'));
+
+					foreach ($nilaiCalculate as $n) {
+						$nilai_temp = array(
+							'score' => $n['score'],
+							'pembagian' => $n['pembagian'],
+							'hasil_bobot' => $n['hasil_bobot']
+						);
+
+						array_push($nilai, $nilai_temp);
+					}
+
+					$user = array(
+						'user_name' => $uc['user_name'],
+						'detail_nilai' => $nilai
+					);
+
+					array_push($response, $user);
+				}
+			}
+		}
+
+		$search = array('periode_id' => $param); //reset
+		$data['max'] = $this->_dataModel->getMaxList($this->prefix.'_detail_calculate', 'score', $search,'kriteria_id','kriteria_id');
+		$data['kriteria']	= $this->_dataModel->get_data($this->prefix.'_kriteria', '', '', '', array('kriteria_id', 'ASC'));
+		$data['alternatif_kriteria'] = $response;
 
 		$config['base_url'] 	= site_url('laporan/search/');
 		$config['suffix'] 		= "?key=" . $key . "&param=" . $param;
@@ -129,138 +160,5 @@ class Laporan extends MX_Controller
 		$this->template->set('title', 'Periode Penilaian');
 		$this->template->set('menu',  'laporan');
 		$this->template->load('root', 'list', $data);
-	}
-
-	public function add()
-	{
-		//auth
-		$this->auth->authorize($this->system['userData'], $this->module, 'add');
-		$this->urlpattern->resetQueryString();
-
-		$data 	= array();
-
-		if ($this->input->post('submit')) {
-
-			$nama_periode = $this->input->post('nama_periode');
-			$tanggal_mulai = $this->input->post('tanggal_mulai');
-			$tanggal_selesai = $this->input->post('tanggal_selesai');
-			$date			= date('Y-m-d H:i:s');
-
-			$value 	= array(
-				'nama_periode'	 		=> $nama_periode,
-				'tanggal_mulai'	 		=> $tanggal_mulai,
-				'tanggal_selesai'		=> $tanggal_selesai,
-				'user_id'				=> $this->auth->user()['id'],
-				'created_at' => $date,
-				'updated_at' => $date
-			);
-
-			$res 	= $this->_dataModel->insert($this->table, $value);
-
-			if ($res) {
-
-				$msg = "Periode Penilaian berhasil ditambahkan";
-
-				$this->session->set_flashdata('message', $msg);
-
-				// redirect($this->urlpattern->getRedirect());
-				redirect(site_url('laporan'));
-			}
-		}
-
-		$this->template->set('title', 'Tambah Periode Penilaian');
-		$this->template->set('menu',  'laporan');
-		$this->template->load('root', 'add', $data);
-	}
-
-	public function edit($id)
-	{
-
-		//auth
-		$this->auth->authorize($this->system['userData'], $this->module, 'edit');
-		$this->urlpattern->resetQueryString();
-
-		$data 	= array();
-		$detail = $this->_dataModel->getDetail($this->table, $this->pkey, $id);
-
-		//check data
-		if (!$detail) {
-			echo "
-				<script type='text/javascript'>
-					alert('Data yang dimaksud tidak sersedia');
-					document.location = '" . $this->urlpattern->getRedirect() . "';
-				</script>
-			";
-
-			exit;
-		}
-
-		if ($this->input->post('submit')) {
-
-			$nama_periode = $this->input->post('nama_periode');
-			$tanggal_mulai = $this->input->post('tanggal_mulai');
-			$tanggal_selesai = $this->input->post('tanggal_selesai');
-			$date			= date('Y-m-d H:i:s');
-
-			$value 	= array(
-				'nama_periode'	 		=> $nama_periode,
-				'tanggal_mulai'	 		=> $tanggal_mulai,
-				'tanggal_selesai'		=> $tanggal_selesai,
-				'user_id'				=> $this->auth->user()['id'],
-				'updated_at' => $date
-			);
-
-			$res 	= $this->_dataModel->update($this->table, $this->pkey, $id, $value);
-
-			if ($res) {
-
-				$msg = "Periode Penilaian berhasil diubah";
-
-				$this->session->set_flashdata('message', $msg);
-
-				// redirect($this->urlpattern->getRedirect());
-				redirect(site_url('laporan'));
-			}
-		}
-
-		$data['data'] 		= $detail;
-
-		$this->template->set('title', 'Ubah Periode Penilaian');
-		$this->template->set('menu',  'laporan');
-		$this->template->load('root', 'edit', $data);
-	}
-
-	public function delete($id)
-	{
-
-		//auth
-		$this->auth->authorize($this->system['userData'], $this->module, 'delete');
-		$this->urlpattern->resetQueryString();
-
-		$detail = $this->_dataModel->getDetail($this->table, $this->pkey, $id);
-
-		//check data
-		if (!$detail) {
-			echo "
-				<script type='text/javascript'>
-					alert('Data yang dimaksud tidak sersedia');
-					document.location = '" . $this->urlpattern->getRedirect() . "';
-				</script>
-			";
-
-			exit;
-		}
-
-		$res 	= $this->_dataModel->delete($this->table, $this->pkey, $id);
-
-		if ($res) {
-
-			$msg = "Periode Penilaian berhasil dihapus";
-
-			$this->session->set_flashdata('message', $msg);
-
-			// redirect($this->urlpattern->getRedirect());
-			redirect(site_url('laporan'));
-		}
 	}
 }

@@ -18,6 +18,7 @@ class Dashboard extends MX_Controller {
 
 		$this->system 	= $this->config->item('system');
 		$this->module 	= "dashboard";
+		$this->prefix 	= $this->db->dbprefix;
 
 		$this->date 	= new Datename();
 
@@ -29,25 +30,62 @@ class Dashboard extends MX_Controller {
 
 		$data 	= array();
 
-		// $data['count_product'] = $this->_dataModel->count_data('nr_product');
-		// $data['count_info'] = $this->_dataModel->count_data('nr_info');
-		// $data['count_gallery'] = $this->_dataModel->count_data('nr_gallery');
-		// $data['order'] = $this->_dataModel->count_data('nr_order');
-		// $data['driver'] = $this->_dataModel->count_data('nr_driver');
-		// $data['unit'] = $this->_dataModel->count_data('nr_unit');
-		// $data['date_format'] = $this->date;
+		$search = '';
 
-
-		// $where = array('status_order' => 2);
-
-		// $start = 0;
-		// $limit = 10;
+		$data['penutur'] = $this->_dataModel->count_data($this->prefix.'_sys_user', 'user_level_id = 3');
+		$data['kriteria'] = $this->_dataModel->count_data($this->prefix.'_kriteria');
+		$data['nilai'] = $this->_dataModel->count_data($this->prefix.'_calculate');
 		
-		// $data['og_unit']	= $this->_dataModel->getList('nr_v_lap_wip', $where, array('id_unit', 'ASC'), '', '');
-		
-		// $data['og_driver']	= $this->_dataModel->getList('nr_driver', $where, array('id_driver', 'ASC'), '', '');
-		
+		// $response = array();
+		// $getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('periode_id', 'ASC	'));
+		// if (!empty($getPeriode)) {
+		// 	foreach ($getPeriode as $periode) {
+		// 		$nilai = array();
+		// 		$calculate =  $this->_dataModel->get_data($this->prefix . '_v_calculate', $search, '', '', array('user_id', 'ASC	'),'','','');
+				
+		// 		if (!empty($calculate)) {
+		// 			foreach ($calculate as $c) {
+	
+		// 				$nilai_temp = (int) $c['total'];
+	
+		// 				array_push($nilai, $nilai_temp);
+		// 			}
+		// 		}
 
+		// 		$periode_temp = array(
+		// 			'nama' => $periode['nama_periode'], 
+		// 			'data' => $nilai
+		// 		);
+
+		// 		array_push($response, $periode_temp);
+		// 	}
+			
+		// }
+
+		// $data['data'] = json_encode($response);
+
+
+		$periode = [];
+		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('periode_id', 'ASC	'));
+		if (!empty($getPeriode)) {
+			foreach ($getPeriode as $p) {
+				$periode[] = $p['nama_periode'];
+			}
+		}
+
+		$nilai_chart = [];
+		if ($search == '') {
+			$getAverageCalculate = $this->_dataModel->getAvgList($this->prefix.'_calculate', 'total', $search,'periode_id','periode_id');
+			
+			if (!empty($getAverageCalculate)) {
+				foreach ($getAverageCalculate as $ac) {
+					$nilai_chart[] = (float) number_format($ac['nilai'], 1);
+				}
+			}
+		}
+
+		$data['periode'] = $periode;
+		$data['nilai_chart'] = $nilai_chart;
 		$this->template->set('title', 	'Beranda');
 		$this->template->set('menu',  	'dashboard');
 		$this->template->load('root', 	'dashboard', $data);
