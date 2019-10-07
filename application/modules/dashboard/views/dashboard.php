@@ -59,7 +59,7 @@
 	</div>
 	<?php } ?>
 </div>
-
+<?php if($this->auth->user()['level'] != 3) { ?>
 <script type="text/javascript">
 	$(document).ready(function() {
 		var ctx = document.getElementById('myChart').getContext("2d");
@@ -121,3 +121,4 @@
 		});
 	});
 </script>
+<?php } ?>

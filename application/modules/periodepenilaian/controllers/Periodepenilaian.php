@@ -311,7 +311,7 @@ class Periodepenilaian extends MX_Controller
 						$total = 0;
 						foreach ($getKriteria as $_kriteria) {
 							$where = array('periode_id' => $detail->periode_id, 'target_user_id' => $penutur['user_id'], 'kriteria_id' => $_kriteria['kriteria_id']);
-							$getNilai = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+							$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
 
 							$raw_score = 0;
 							if (empty($getNilai)) { //user already assessment
@@ -321,22 +321,6 @@ class Periodepenilaian extends MX_Controller
 								foreach ($getNilai as $nilai) {
 									
 									$raw_score += $nilai['score'];
-									// $pembagian = number_format(($nilai['score']/$getMax[0]['score']), 1);
-									// $hasil_bobot = number_format(($pembagian*$nilai['bobot']), 1);
-
-									// $total += $hasil_bobot;
-
-									// $data_nilai = array(
-									// 	'kriteria_id' => $nilai['kriteria_id'],
-									// 	'nama' => $nilai['nama'],
-									// 	'score' => $nilai['score'],
-									// 	'bobot' => $nilai['bobot'],
-									// 	'max' => $getMax[0]['score'],
-									// 	'pembagian' => $pembagian,
-									// 	'hasil_bobot' => $hasil_bobot
-									// );
-
-									// array_push($temp_nilai, $data_nilai);
 								}
 
 								$score = number_format(($raw_score/count($getNilai)),1);

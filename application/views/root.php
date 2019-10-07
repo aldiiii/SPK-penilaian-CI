@@ -56,8 +56,10 @@
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/summernote/dist/summernote.css">
 
-    <?php if ($menu == 'dashboard') { ?>
-        <link type="text/css" href="<?php echo base_url(); ?>assets/css/Chart.min.css" rel="stylesheet">
+    <?php if($this->auth->user()['level'] != 3) { ?>
+        <?php if ($menu == 'dashboard') { ?>
+            <link type="text/css" href="<?php echo base_url(); ?>assets/css/Chart.min.css" rel="stylesheet">
+        <?php } ?>
     <?php } ?>
 
 </head>
@@ -194,29 +196,36 @@
                                     <li <?php if ($menu == 'dashboard') echo "class='active'"; ?>>
                                         <a href="<?php echo site_url('dashboard'); ?>"><i class="ti ti-home"></i><span>Beranda</span></a>
                                     </li>
-                                    <?php if($this->auth->user()['level'] == 1) { ?>
+                                    <?php if($this->auth->user()['level'] == 1 || $this->auth->user()['level'] == 4) { ?>
                                     <!-- Menu System -->
                                     <li <?php if (in_array($menu, array('level', 'user', 'module', 'task', 'role'))) echo "class='open active hasChild'"; ?>>
-                                        <a href="javascript:;"><i class="ti ti-settings"></i><span>Sistem</span></a>
+                                        <a href="javascript:;"><i class="ti ti-user"></i><span>Pengguna</span></a>
                                         <ul class="acc-menu" <?php if (in_array($menu, array('level', 'user', 'module', 'task', 'role'))) echo "style='display:block'"; ?>>
                                             <li <?php if ($menu == 'level') echo "class='active'"; ?>>
-                                                <a href="<?php echo site_url('syslevel'); ?>"><i class="fa fa-angle-right"></i> User Level</a>
+                                                <a href="<?php echo site_url('syslevel'); ?>"><i class="fa fa-angle-right"></i> Level Pengguna</a>
                                             </li>
                                             <li <?php if ($menu == 'user') echo "class='active'"; ?>>
-                                                <a href="<?php echo site_url('sysuser'); ?>"><i class="fa fa-angle-right"></i> User</a>
+                                                <a href="<?php echo site_url('sysuser'); ?>"><i class="fa fa-angle-right"></i> Data Pengguna</a>
                                             </li>
-                                            <li <?php if ($menu == 'module') echo "class='active'"; ?>>
-                                                <a href="<?php echo site_url('sysmodule'); ?>"><i class="fa fa-angle-right"></i> Module</a>
-                                            </li>
-                                            <li <?php if ($menu == 'task') echo "class='active'"; ?>>
-                                                <a href="<?php echo site_url('systask'); ?>"><i class="fa fa-angle-right"></i> Task</a>
-                                            </li>
+                                            <?php if($this->auth->user()['level'] == 1) { ?>
+                                                <li <?php if ($menu == 'module') echo "class='active'"; ?>>
+                                                    <a href="<?php echo site_url('sysmodule'); ?>"><i class="fa fa-angle-right"></i> Module</a>
+                                                </li>
+                                            <?php } ?>
+                                            <?php if($this->auth->user()['level'] == 1) { ?>
+                                                <li <?php if ($menu == 'task') echo "class='active'"; ?>>
+                                                    <a href="<?php echo site_url('systask'); ?>"><i class="fa fa-angle-right"></i> Task</a>
+                                                </li>
+                                            <?php } ?>
+                                            <?php if($this->auth->user()['level'] == 1) { ?>
                                             <li <?php if ($menu == 'role') echo "class='active'"; ?>>
                                                 <a href="<?php echo site_url('sysrole'); ?>"><i class="fa fa-angle-right"></i> Role</a>
                                             </li>
+                                            <?php } ?>
                                         </ul>
                                     </li>
                                     <?php } ?>
+                                    <?php if($this->auth->user()['level'] == 1 || $this->auth->user()['level'] == 4) { ?>
                                     <!-- Kriteria -->
                                     <li <?php if (in_array($menu, array('kriteria'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-file"></i><span>Kriteria</span></a>
@@ -235,6 +244,8 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <?php } ?>
+                                    <?php if($this->auth->user()['level'] == 1 || $this->auth->user()['level'] == 3 || $this->auth->user()['level'] == 4) { ?>
                                     <!-- Penilaian -->
                                     <li <?php if (in_array($menu, array('penilaian','add_penilaian'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-file"></i><span>Penilaian</span></a>
@@ -242,12 +253,16 @@
                                             <li <?php if ($menu == 'penilaian') echo "class='active'"; ?>>
                                                 <a href="<?php echo site_url('penilaian'); ?>"><i class="fa fa-angle-right"></i> Data Penilaian</a>
                                             </li>
+                                            <?php if($this->auth->user()['level'] == 1 || $this->auth->user()['level'] == 3) { ?>
                                             <li <?php if ($menu == 'add_penilaian') echo "class='active'"; ?>>
                                                 <a href="<?php echo site_url('penilaian/add'); ?>"><i class="fa fa-angle-right"></i> Tambah Penilaian</a>
                                             </li>
+                                            <?php } ?>
                                         </ul>
                                     </li>
+                                    <?php } ?>
 
+                                    <?php if($this->auth->user()['level'] == 1 || $this->auth->user()['level'] == 2 || $this->auth->user()['level'] == 4) { ?>
                                     <!-- Laporan -->
                                     <li <?php if (in_array($menu, array('laporan'))) echo "class='open active hasChild'"; ?>>
                                         <a href="javascript:;"><i class="ti ti-file"></i><span>Laporan</span></a>
@@ -257,6 +272,8 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <?php } ?>
+
                                 </ul>
                             </nav>
                         </div>
@@ -325,8 +342,10 @@
     <script src="<?php echo base_url(); ?>assets/plugins/summernote/dist/summernote.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/plugins/jquery-mask/jquery.mask.js"></script>
 
-    <?php if ($menu == 'dashboard') { ?>
-        <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/Chart.min.js"></script>
+    <?php if($this->auth->user()['level'] != 3) { ?>
+        <?php if ($menu == 'dashboard') { ?>
+            <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/Chart.min.js"></script>
+        <?php } ?>
     <?php } ?>
 
 

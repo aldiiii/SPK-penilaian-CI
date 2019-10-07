@@ -67,9 +67,11 @@
 		<div class="panel-body">
 			<div class="row table-control">
 				<div class="col-sm-6">
+					<?php if($this->auth->user()['level'] == 1 || $this->auth->user()['level'] == 3) { ?>
 					<form action="<?php echo site_url('penilaian/add'); ?>">
 						<button class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Baru</button>
 					</form>
+					<?php } ?>
 				</div>
 				<div class="col-sm-6 text-right">
 					<form class="form-inline" action="<?php echo site_url('penilaian/search'); ?>" id="searchForm">

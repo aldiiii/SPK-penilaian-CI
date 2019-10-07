@@ -24,7 +24,7 @@ class Penilaian extends MX_Controller
 		$this->pkey 	= "periode_id";
 		$this->join 	= $this->prefix ."_sys_user";
 		$this->fkey 	= "user_id";
-		$this->module 	= "periodepenilaian";
+		$this->module 	= "penilaian";
 		$this->view 	= '_v_penilaian';
 	}
 
@@ -73,46 +73,104 @@ class Penilaian extends MX_Controller
 		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
 		$response = array();
 
-		$getPeriode	= $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC	'));
-		if (!empty($getPeriode)) {
-			foreach ($getPeriode as $periode) {
-				$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id']);
-				$getUserPeriode = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), 'target_user_id', '');
-				
-				$detail = array();
-				if (!empty($getUserPeriode)) {
-					foreach ($getUserPeriode as $userperiode) {
-						$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id'], 'target_user_id' => $userperiode['target_user_id']);
-						$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
-						$nilai = array();
-		
-						if (!empty($getNilai)) {
-							foreach ($getNilai as $o_res) {
-								$value_option = array(
-									'kriteria_id' => $o_res['kriteria_id'],
-									'score' => $o_res['score'],
-								);
-		
-								array_push($nilai, $value_option);
+		if ($this->auth->user()['level'] == 3) {
+			$getPeriode	= $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC	'));
+			if (!empty($getPeriode)) {
+				foreach ($getPeriode as $periode) {
+					$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id']);
+					$getUserPeriode = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), 'target_user_id', '');
+					
+					$detail = array();
+					if (!empty($getUserPeriode)) {
+						foreach ($getUserPeriode as $userperiode) {
+							$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id'], 'target_user_id' => $userperiode['target_user_id']);
+							$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+							$nilai = array();
+			
+							if (!empty($getNilai)) {
+								foreach ($getNilai as $o_res) {
+									$value_option = array(
+										'kriteria_id' => $o_res['kriteria_id'],
+										'score' => $o_res['score'],
+									);
+			
+									array_push($nilai, $value_option);
+								}
 							}
+
+							$user = array(
+								'target_user_name' => $userperiode['target_user_name'],
+								'nilai' => $nilai,
+							);
+
+							array_push($detail, $user);
 						}
-
-						$user = array(
-							'target_user_name' => $userperiode['target_user_name'],
-							'nilai' => $nilai,
-						);
-
-						array_push($detail, $user);
 					}
+
+					$value = array(
+						'periode_id' => $periode['periode_id'],
+						'nama_periode' => $periode['nama_periode'],
+						'detail' => $detail
+					);
+
+					array_push($response, $value);
 				}
+			}
+		} else {
+			$getPeriode	= $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC	'));
+			if (!empty($getPeriode)) {
+				foreach ($getPeriode as $periode) {
+					$where = array('periode_id' => $periode['periode_id']);
+					$getUserPeriode = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), 'target_user_id', '');
+					
+					$detail = array();
+					if (!empty($getUserPeriode)) {
+						foreach ($getUserPeriode as $userperiode) {
+							$getKriteria = $this->_dataModel->getList($this->prefix . '_kriteria', '', array('kriteria_id', 'ASC'), '', '');
+						
+							if (!empty($getKriteria)) {
+								$data_nilai = array();
+								$total = 0;
+								foreach ($getKriteria as $_kriteria) {
+									$where = array('periode_id' => $periode['periode_id'], 'target_user_id' => $userperiode['target_user_id'], 'kriteria_id' => $_kriteria['kriteria_id']);
+									$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+									
+									$raw_score = 0;
+				
+									if (!empty($getNilai)) {
+										foreach ($getNilai as $o_res) {
+											$raw_score += $o_res['score'];
+										}
+	
+										$score = number_format(($raw_score/count($getNilai)),1);
+									}
+	
+									$value_option = array(
+										'kriteria_id' => $_kriteria['kriteria_id'],
+										'score' => $score
+									);
 
-				$value = array(
-					'periode_id' => $periode['periode_id'],
-					'nama_periode' => $periode['nama_periode'],
-					'detail' => $detail
-				);
-
-				array_push($response, $value);
+									array_push($data_nilai, $value_option);
+								}
+							}
+	
+							$user = array(
+								'target_user_name' => $userperiode['target_user_name'],
+								'nilai' => $data_nilai,
+							);
+	
+							array_push($detail, $user);
+						}
+					}
+	
+					$value = array(
+						'periode_id' => $periode['periode_id'],
+						'nama_periode' => $periode['nama_periode'],
+						'detail' => $detail
+					);
+	
+					array_push($response, $value);
+				}
 			}
 		}
 
@@ -323,7 +381,7 @@ class Penilaian extends MX_Controller
 		$response = array();
 
 		$where = "status = 1";
-		$getKriteria	= $this->_dataModel->get_data($this->prefix . '_kriteria', $where, '', '', array('kriteria_id', 'DESC'));
+		$getKriteria	= $this->_dataModel->get_data($this->prefix . '_kriteria', $where, '', '', array('kriteria_id', 'ASC'));
 		if (!empty($getKriteria)) {
 			foreach ($getKriteria as $kriteria) {
 				$where = array('kriteria_id' => $kriteria['kriteria_id']);

@@ -97,16 +97,16 @@ class Laporan extends MX_Controller
 		$data['datas']	= $this->_dataModel->get_data($this->prefix . '_v_calculate', $search, '', '', array('user_id', 'ASC'));
 
 		$response = array();
-		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('user_id', 'ASC	'));
+		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('periode_id', 'ASC	'));
 		if (!empty($getPeriode)) {
-			$userCalculate =  $this->_dataModel->get_data($this->prefix . '_v_detail_calculate', $search, '', '', array('user_id', 'ASC	'),'','','user_id');
+			$userCalculate =  $this->_dataModel->get_data($this->prefix . '_v_detail_calculate', $search, '', '', array('kriteria_id', 'ASC	'),'','','user_id');
 			
 			if (!empty($userCalculate)) {
 				foreach ($userCalculate as $uc) {
 					$nilai = array();
 					$search = array('periode_id' => $param, 'user_id' => $uc['user_id']);
 
-					$nilaiCalculate =  $this->_dataModel->get_data($this->prefix . '_v_detail_calculate', $search, '', '', array('user_id', 'ASC'));
+					$nilaiCalculate =  $this->_dataModel->get_data($this->prefix . '_v_detail_calculate', $search, '', '', array('kriteria_id', 'ASC'));
 
 					foreach ($nilaiCalculate as $n) {
 						$nilai_temp = array(
