@@ -94,8 +94,11 @@ class Laporan extends MX_Controller
 		$limit 			= 20;
 		// $join 			= array($this->join, $this->join .'.'. $this->fkey .' = '. $this->table .'.'. $this->fkey, 'left');
 		// $join2 			= array($this->join2, $this->join2 .'.'. $this->fkey2 .' = '. $this->table .'.'. $this->fkey2, 'left');
+
+		//ambil data hasil akhir
 		$data['datas']	= $this->_dataModel->get_data($this->prefix . '_v_calculate', $search, '', '', array('user_id', 'ASC'));
 
+		//ambil data dari detial calculate
 		$response = array();
 		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', $search, '', '', array('periode_id', 'ASC	'));
 		if (!empty($getPeriode)) {
@@ -129,8 +132,14 @@ class Laporan extends MX_Controller
 		}
 
 		$search = array('periode_id' => $param); //reset
+
+		//nilai max
 		$data['max'] = $this->_dataModel->getMaxList($this->prefix.'_detail_calculate', 'score', $search,'kriteria_id','kriteria_id');
+		
+		//kriteria
 		$data['kriteria']	= $this->_dataModel->get_data($this->prefix.'_kriteria', '', '', '', array('kriteria_id', 'ASC'));
+		
+		//hasil ambil laporan
 		$data['alternatif_kriteria'] = $response;
 
 		$config['base_url'] 	= site_url('laporan/search/');

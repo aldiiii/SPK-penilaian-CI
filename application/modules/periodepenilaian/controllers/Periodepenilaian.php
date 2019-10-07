@@ -325,13 +325,13 @@ class Periodepenilaian extends MX_Controller
 								}
 
 								//perhitungan dan hasil
-								$score = number_format(($raw_score/count($getNilai)),1);
+								$score = number_format(($raw_score/count($getNilai)),1); //matrix alternatif
 								$where = array('periode_id' => $detail->periode_id, 'kriteria_id' => $_kriteria['kriteria_id']);
 								
-								$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where);
-								$pembagian = number_format(($score/$getMax[0]['score']), 1);
-								$hasil_bobot = number_format(($pembagian*$_kriteria['bobot']), 1);
-								$total += $hasil_bobot;
+								$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where); //nilai maximum
+								$pembagian = number_format(($score/$getMax[0]['score']), 1); //MATRIX TERNORMALISASI
+								$hasil_bobot = number_format(($pembagian*$_kriteria['bobot']), 1); //metode saw pembagian bobot
+								$total += $hasil_bobot; // jumlah hasil metode saw
 							}
 
 							//hasil dari perhitungan

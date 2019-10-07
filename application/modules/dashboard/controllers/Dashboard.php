@@ -41,6 +41,7 @@ class Dashboard extends MX_Controller {
 		$data['jumlah_kriteria'] = $this->_dataModel->count_data($this->prefix.'_kriteria');
 		$data['jumlah_nilai'] = $this->_dataModel->count_data($this->prefix.'_calculate');
 
+		//ambil periode
 		$periode = [];
 		$getPeriode = $this->_dataModel->get_data($this->prefix . '_periode_penilaian', '', '', '', array('periode_id', 'ASC'));
 		if (!empty($getPeriode)) {
@@ -49,6 +50,7 @@ class Dashboard extends MX_Controller {
 			}
 		}
 
+		//nilai hasil pehitungan, jika tidak ada nama penutur maka menagmbil nilai rata rata dari keseluruhan
 		$nilai_chart = [];
 		if ($search == '') {
 			$getAverageCalculate = $this->_dataModel->getAvgList($this->prefix.'_calculate', 'total', $search,'periode_id','periode_id');
@@ -72,6 +74,7 @@ class Dashboard extends MX_Controller {
 		$data['periode'] = $periode;
 		$data['nilai_chart'] = $nilai_chart;
 
+		//tampilkan penutur
 		$getPenutur = $this->_dataModel->getList($this->prefix.'_sys_user', 'user_level_id = 3', array('user_name', 'ASC'));
 		$penutur = "";
 
