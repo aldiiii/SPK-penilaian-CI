@@ -294,6 +294,7 @@ class Periodepenilaian extends MX_Controller
 			exit;
 		}
 
+		//cek kalkulasi sudah ada apa tidak?
 		$checkAvailable = $this->_dataModel->getLastData($this->prefix.'_calculate', 'periode_id');
 
 		$calculate = array();
@@ -303,13 +304,13 @@ class Periodepenilaian extends MX_Controller
 			
 			if (!empty($getPenutur)) { //get all user
 				foreach ($getPenutur as $penutur) {
-
+					//ambil semua kriteria
 					$getKriteria = $this->_dataModel->getList($this->prefix . '_kriteria', '', array('kriteria_id', 'ASC'), '', '');
 					
 					if (!empty($getKriteria)) {
 						$data_nilai = array();
 						$total = 0;
-						foreach ($getKriteria as $_kriteria) {
+						foreach ($getKriteria as $_kriteria) { //looping kriteria
 							$where = array('periode_id' => $detail->periode_id, 'target_user_id' => $penutur['user_id'], 'kriteria_id' => $_kriteria['kriteria_id']);
 							$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
 
@@ -320,18 +321,20 @@ class Periodepenilaian extends MX_Controller
 							} else { //all user not yet assessment
 								foreach ($getNilai as $nilai) {
 									
-									$raw_score += $nilai['score'];
+									$raw_score += $nilai['score']; //masukan nilai kedalam data score (dijumlahkan)
 								}
 
+								//perhitungan dan hasil
 								$score = number_format(($raw_score/count($getNilai)),1);
 								$where = array('periode_id' => $detail->periode_id, 'kriteria_id' => $_kriteria['kriteria_id']);
+								
 								$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where);
 								$pembagian = number_format(($score/$getMax[0]['score']), 1);
 								$hasil_bobot = number_format(($pembagian*$_kriteria['bobot']), 1);
 								$total += $hasil_bobot;
 							}
 
-
+							//hasil dari perhitungan
 							$temp_nilai = array(
 								'kriteria_id' => $_kriteria['kriteria_id'],
 								'nama' => $_kriteria['nama'],
@@ -342,19 +345,20 @@ class Periodepenilaian extends MX_Controller
 								'hasil_bobot' => $hasil_bobot
 							);
 
-							array_push($data_nilai, $temp_nilai);
+							array_push($data_nilai, $temp_nilai); //hasil pehitungan dimasukan kedalam array
 						}
 
 						$total = number_format($total, 1);
 						$label = $this->label_calculate($total);
 			
+						//data user yang telah terhitung
 						$temp_user = array(
 							'user_name' => $penutur['user_name'],
 							'user_id' => $penutur['user_id'],
 							'periode_id' => $detail->periode_id,
 							'total' => $total,
 							'label' => $label,
-							'nilai' => $data_nilai,
+							'nilai' => $data_nilai, //nilai hasil perhitungan
 						);
 
 						array_push($calculate, $temp_user);
@@ -375,7 +379,7 @@ class Periodepenilaian extends MX_Controller
 			exit;
 		}
 
-		$insert_calculate = $this->insert_calculate($calculate);
+		$insert_calculate = $this->insert_calculate($calculate); //hasil hitung dimasukan ke database
 
 		if ($insert_calculate) {
 
@@ -388,6 +392,7 @@ class Periodepenilaian extends MX_Controller
 		}
 	}
 
+	//keterangan hasil kalkulasi
 	public function label_calculate($total) {
 		if ($total >= 3.5 && $total <= 4) {
 			return 'Sangat Baik';
@@ -403,6 +408,7 @@ class Periodepenilaian extends MX_Controller
 		}
 	}
 
+	//data dimasukan kedalam database
 	public function insert_calculate($data) {
 		$date = date('Y-m-d H:i:s');
 		foreach ($data as $_data) {
@@ -415,10 +421,11 @@ class Periodepenilaian extends MX_Controller
 				'updated_at' => $date
 			);
 
+			//table spk_calculate
 			$insert = $this->_dataModel->insert($this->prefix.'_calculate', $value);
 
 			if ($insert) {
-				$caclulate_id = $this->db->insert_id();
+				$caclulate_id = $this->db->insert_id(); //ambil id terakhir
 				
 				foreach ($_data['nilai'] as $_nilai) {
 					$detail = array(
@@ -433,6 +440,7 @@ class Periodepenilaian extends MX_Controller
 						'hasil_bobot' => $_nilai['hasil_bobot'],
 					);
 
+					//table spk_detail_calculate
 					$insert = $this->_dataModel->insert($this->prefix.'_detail_calculate', $detail);		
 
 				}
@@ -442,6 +450,7 @@ class Periodepenilaian extends MX_Controller
 		return true;
 	}
 
+	//fungsi untuk memberi tau kalau sudah dihitung / tidak bisa dihitung
 	public function reject_calculate() {
 		$response = "
 				<script type='text/javascript'>

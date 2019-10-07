@@ -90,10 +90,10 @@
 				</div>
 			</div>
 			<div class="table-responsive">
-				<?php if (!$datas) {
+				<?php if (!$datas) { //jika datas kosong
 					echo "<tr><td colspan='6' align='center'>Data kosong</td></tr>";
 				} else {
-					foreach ($datas as $result) {
+					foreach ($datas as $result) { //jika datas ada lakukan looping
 						echo "<h5>".$result['nama_periode']."</h5>";
 					?>
 					<table class="table">
