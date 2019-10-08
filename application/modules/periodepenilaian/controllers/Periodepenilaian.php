@@ -295,7 +295,7 @@ class Periodepenilaian extends MX_Controller
 		}
 
 		//cek kalkulasi sudah ada apa tidak?
-		$checkAvailable = $this->_dataModel->getLastData($this->prefix.'_calculate', 'periode_id');
+		$checkAvailable = $this->_dataModel->getLastData($this->prefix.'_calculate', 'periode_id', array('periode_id' => $detail->periode_id));
 
 		$calculate = array();
 		if ($checkAvailable->num_rows() === 0) { //check available period

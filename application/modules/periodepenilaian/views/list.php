@@ -60,7 +60,7 @@
 								<td>" . $result['nama_periode'] . "</td>
 								<td>" . $result['tanggal_mulai'] . "</td>
 								<td>" . $result['tanggal_selesai'] . "</td>
-								<td class='text-capitalize'>" . $result['user_username'] . "</td>
+								<td class='text-capitalize'>" . $result['user_name'] . "</td>
 								<td class='table-action text-right'>
 									<form action='" . site_url() . "periodepenilaian/calculate/" . $result['periode_id'] . "' >
 										<button class='btn btn-sm btn-primary' data-toggle='tooltip' title='Hitung Penilaian'><i class='fa fa-calculator'></i> Hitung</button>

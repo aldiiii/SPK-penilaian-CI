@@ -226,11 +226,12 @@ class DataModel extends CI_Model
 		return $this->db->get()->num_rows();
 	}
 
-	public function getLastData($table, $pkey)
+	public function getLastData($table, $pkey, $where)
 	{
 		$this->db->select('*');
 		$this->db->from($table);
 		$this->db->order_by($pkey, 'desc');
+		$this->db->where($where);
 		$this->db->limit(1);
 
 		return $this->db->get();
