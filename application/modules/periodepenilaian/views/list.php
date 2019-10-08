@@ -38,10 +38,11 @@
 					<thead>
 						<tr>
 							<th width="5%">No</th>
-							<th width="30%">Nama Periode</th>
+							<th width="15%">Nama Periode</th>
 							<th width="15%">Tanggal Mulai</th>
 							<th width="15%">Tanggal Selesai</th>
 							<th width="15%">Dibuat oleh</th>
+							<th width="15%">Status Hitung</th>
 							<th width="45%" class="text-center">Aksi</th>
 						</tr>
 					</thead>
@@ -54,6 +55,14 @@
 							$no = $number + 1;
 
 							foreach ($datas as $result) {
+								$query = $this->db->query("SELECT * FROM spk_calculate WHERE periode_id = '".$result['periode_id']."' ORDER BY periode_id DESC LIMIT 1");
+								if ($query->num_rows() > 0) {
+									$status_label = "Sudah";
+									$label = "success";
+								}  else {
+									$status_label = "Belum";
+									$label = "danger";
+								}
 								echo "
 							<tr>
 								<td>" . $no . "</td>
@@ -61,10 +70,14 @@
 								<td>" . $result['tanggal_mulai'] . "</td>
 								<td>" . $result['tanggal_selesai'] . "</td>
 								<td class='text-capitalize'>" . $result['user_name'] . "</td>
-								<td class='table-action text-right'>
-									<form action='" . site_url() . "periodepenilaian/calculate/" . $result['periode_id'] . "' >
+								<td><span class='label label-".$label."'>". $status_label ."</span></td>
+								<td class='table-action text-right'>";
+									if ($query->num_rows() <= 0) {
+									echo "<form action='" . site_url() . "periodepenilaian/calculate/" . $result['periode_id'] . "' >
 										<button class='btn btn-sm btn-primary' data-toggle='tooltip' title='Hitung Penilaian'><i class='fa fa-calculator'></i> Hitung</button>
-									</form>
+									</form>";
+									}
+									echo"
 									<form action='" . site_url() . "periodepenilaian/edit/" . $result['periode_id'] . "' >
 										<button class='btn btn-sm btn-default-alt' data-toggle='tooltip' title='Ubah'><i class='fa fa-pencil'></i></button>
 									</form>

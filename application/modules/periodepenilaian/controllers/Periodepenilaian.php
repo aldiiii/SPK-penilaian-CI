@@ -290,7 +290,7 @@ class Periodepenilaian extends MX_Controller
 
 		//check data
 		if (!$detail) {
-			echo $this->reject_calculate();
+			echo $this->reject_calculate('Data Tidak Tersedia');
 			exit;
 		}
 
@@ -316,11 +316,10 @@ class Periodepenilaian extends MX_Controller
 
 							$raw_score = 0;
 							if (empty($getNilai)) { //user already assessment
-								echo $this->reject_calculate();
+								echo $this->reject_calculate('Ada User Yang Belum Diniliai');
 								exit;
 							} else { //all user not yet assessment
 								foreach ($getNilai as $nilai) {
-									
 									$raw_score += $nilai['score']; //masukan nilai kedalam data score (dijumlahkan)
 								}
 
@@ -364,18 +363,18 @@ class Periodepenilaian extends MX_Controller
 						array_push($calculate, $temp_user);
 
 					}  else { //kriteria not found
-						echo $this->reject_calculate();
+						echo $this->reject_calculate('Kriteria Tidak Tersedia');
 						exit;
 					}
 				}
 
 			} else { //user not found
-				echo $this->reject_calculate();
+				echo $this->reject_calculate('User Tidak Tersedia');
 				exit;
 			}
 			
 		} else { //period not found
-			echo $this->reject_calculate();
+			echo $this->reject_calculate('Periode Sudah Dinilai');
 			exit;
 		}
 
@@ -451,10 +450,10 @@ class Periodepenilaian extends MX_Controller
 	}
 
 	//fungsi untuk memberi tau kalau sudah dihitung / tidak bisa dihitung
-	public function reject_calculate() {
+	public function reject_calculate($message) {
 		$response = "
 				<script type='text/javascript'>
-					alert('Data tidak dapat dikalkulasi, silahkan cek kembali');
+					alert('Data tidak dapat dikalkulasi, ".$message.". Silahkan cek kembali');
 					document.location = '" . $this->urlpattern->getRedirect() . "';
 				</script>
 			";
