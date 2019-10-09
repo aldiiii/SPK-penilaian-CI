@@ -131,14 +131,31 @@ class Laporan extends MX_Controller
 			}
 		}
 
-		$search = array('periode_id' => $param); //reset
-
-		//nilai max
-		$data['max'] = $this->_dataModel->getMaxList($this->prefix.'_detail_calculate', 'score', $search,'kriteria_id','kriteria_id');
-		
 		//kriteria
-		$data['kriteria']	= $this->_dataModel->get_data($this->prefix.'_kriteria', '', '', '', array('kriteria_id', 'ASC'));
+		$kriteria	= $this->_dataModel->get_data($this->prefix.'_kriteria', '', '', '', array('kriteria_id', 'ASC'));
+		//nilai max
 		
+		if ($kriteria) {
+			$listmax = array();
+			foreach ($kriteria as $k) {
+				$search = array('periode_id' => $param, 'kriteria_id' => $k['kriteria_id']);
+				$max = $this->_dataModel->getMaxList($this->prefix.'_detail_calculate', 'max', $search,'kriteria_id','kriteria_id');
+				
+				if ($max->num_rows() > 0) {
+					foreach ($max->result() as $m) {
+						$datamax = array(
+							'score' => $m->max
+						);
+
+						array_push($listmax, $datamax);
+					}
+				}
+			}
+		}
+
+		$data['kriteria'] = $kriteria;
+		$data['max'] = $listmax;
+
 		//hasil ambil laporan
 		$data['alternatif_kriteria'] = $response;
 

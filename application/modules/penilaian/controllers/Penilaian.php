@@ -83,13 +83,14 @@ class Penilaian extends MX_Controller
 					//ambil user berdasarkan periode
 					$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id']);
 					$getUserPeriode = $this->_dataModel->getList($this->prefix . '_v_penilaian', $where, array('kriteria_id', 'ASC'), 'target_user_id', '');
-					
+
 					$detail = array();
 					if (!empty($getUserPeriode)) {
 						foreach ($getUserPeriode as $userperiode) { //looping user periode
 							//ambil nilai
 							$where = array('periode_id' => $periode['periode_id'], 'user_id' => $this->auth->user()['id'], 'target_user_id' => $userperiode['target_user_id']);
 							$getNilai = $this->_dataModel->getList($this->prefix . '_penilaian', $where, array('kriteria_id', 'ASC'), '', '');
+							
 							$nilai = array();
 			
 							if (!empty($getNilai)) {
@@ -443,6 +444,56 @@ class Penilaian extends MX_Controller
 		$this->template->set('title', 'Tambah Penilaian');
 		$this->template->set('menu',  'add_penilaian');
 		$this->template->load('root', 'add', $data);
+	}
+
+	public function get_penutur_available()
+	{
+		$info = new stdClass;
+		$info->status = 0;
+		$info->message = '';
+
+		$this->auth->authorize($this->system['userData'], $this->module, 'add');
+		$this->urlpattern->resetQueryString();
+
+		try {
+			$periode_id = $this->input->post('periode_id');
+			$getPenutur = $this->_dataModel->getList($this->prefix.'_sys_user', 'user_level_id = 3', array('user_name', 'ASC'));
+
+			$data = array();
+			if ($getPenutur) {
+				$where = array('periode_id' => $periode_id);
+				$getUserPeriode = $this->_dataModel->getGroupUser($this->prefix . '_v_penilaian', $where, 'kriteria_id ASC', 'target_user_id');
+
+				$userPeriode = [];
+				if ($getUserPeriode->num_rows() > 0) {
+					foreach ($getUserPeriode->result() as $u) {
+						$userPeriode[] = $u->target_user_id;
+					}
+				}
+
+				foreach ($getPenutur as $result) { 
+					if (in_array($result['user_id'], $userPeriode)) {
+						continue;
+					} else {
+						$temp = array(
+							'user_id' =>  $result['user_id'],
+							'user_name' => $result['user_name']
+						);
+
+						array_push($data, $temp);
+					}
+				}
+
+				$info->data 	= $data;
+				$info->message 	= "Success";
+				$info->status 	= 200; 
+			}
+		} catch (Exception $e) {
+			$info->message = $e->getMessage();
+			$info->status = 401;
+		}
+
+		echo json_encode($info);
 	}
 
 	public function edit($id)

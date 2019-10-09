@@ -21,8 +21,6 @@
                 <div class="form-group col-sm-6">
                     <label class="control-label">Pilih Penutur</label>
                     <select class="form-control params-assessment" name="penutur_id" id="penutur_id" style="width: 100%" data-placeholder="Pilih Periode ID">
-                        <option value="">- Pilih Penutur -</option>
-                        <?php echo $penutur; ?>
                     </select>
                 </div>
                 <?php
@@ -83,30 +81,41 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
-        $('.params-assessment').on('change', function(){
+        
+        $('#periode_id').on('change', function(){
             showAssessment();
-        });
-
-        $('#penutur_id').on('change', function(){
             $.ajax({
-                type: "GET",
-                url: '<?php echo base_url("penilaian/validate") ?>',
+                type: "POST",
+                url: '<?php echo base_url("penilaian/get_penutur_available") ?>',
                 data: {
-                    penutur_id: $('#penutur_id option:selected').val(),
-                    periode_id: $('#periode_id option:selected').val(),                   
+                    periode_id: $('#periode_id option:selected').val(),
                 },
                 dataType:'JSON',
                 success: function(data){
-                    //echo what the server sent back...
+                    if (data.status == 200) {
+                        var res = data.data;
+                        var list = res.length - 1;
+                        var option = "<option>Pilih Penutur</option>";
+                        for (var i = 0; i <= list; i++) {
+                            option += '<option value="' + res[i].user_id + '">' + res[i].user_name + '</option>';
+                        }    
+                    }  else {
+                        var option = "<option>Pilih Penutur</option>";
+                    }
+
+                    console.log(option);
+
+                    $("#penutur_id").html(option);
+
+                    $('#penutur_id').on('change', function(){
+                        showAssessment();
+                    });
                 }
             });
         });
 
         function showAssessment() {
-            console.log($('#penutur_id option:selected').val());
-            console.log($('#periode_id option:selected').val());
-            if (($('#penutur_id option:selected').val() != '') && ($('#periode_id option:selected').val() != '')) {
+            if (($('#penutur_id option:selected').val() > 0) && ($('#periode_id option:selected').val() > 0)) {
                 $('.assessment-form').show();
                 $('.assessment').attr('checked', false);
             } else {

@@ -319,18 +319,12 @@ class Periodepenilaian extends MX_Controller
 								echo $this->reject_calculate('Ada User Yang Belum Diniliai');
 								exit;
 							} else { //all user not yet assessment
-								foreach ($getNilai as $nilai) {
+								foreach ($getNilai as $key => $nilai) {
 									$raw_score += $nilai['score']; //masukan nilai kedalam data score (dijumlahkan)
 								}
-
 								//perhitungan dan hasil
 								$score = number_format(($raw_score/count($getNilai)),1); //matrix alternatif
-								$where = array('periode_id' => $detail->periode_id, 'kriteria_id' => $_kriteria['kriteria_id']);
-								
-								$getMax = $this->_dataModel->getMax($this->prefix.'_penilaian', $where); //nilai maximum
-								$pembagian = number_format(($score/$getMax[0]['score']), 1); //MATRIX TERNORMALISASI
-								$hasil_bobot = number_format(($pembagian*$_kriteria['bobot']), 1); //metode saw pembagian bobot
-								$total += $hasil_bobot; // jumlah hasil metode saw
+
 							}
 
 							//hasil dari perhitungan
@@ -338,25 +332,19 @@ class Periodepenilaian extends MX_Controller
 								'kriteria_id' => $_kriteria['kriteria_id'],
 								'nama' => $_kriteria['nama'],
 								'bobot' => $_kriteria['bobot'],
-								'score' => $score,
-								'max' => $getMax[0]['score'],
-								'pembagian' => $pembagian,
-								'hasil_bobot' => $hasil_bobot
+								'score' => $score
 							);
 
 							array_push($data_nilai, $temp_nilai); //hasil pehitungan dimasukan kedalam array
 						}
 
 						$total = number_format($total, 1);
-						$label = $this->label_calculate($total);
 			
 						//data user yang telah terhitung
 						$temp_user = array(
 							'user_name' => $penutur['user_name'],
 							'user_id' => $penutur['user_id'],
 							'periode_id' => $detail->periode_id,
-							'total' => $total,
-							'label' => $label,
 							'nilai' => $data_nilai, //nilai hasil perhitungan
 						);
 
@@ -379,6 +367,7 @@ class Periodepenilaian extends MX_Controller
 		}
 
 		$insert_calculate = $this->insert_calculate($calculate); //hasil hitung dimasukan ke database
+		$do_calculate = $this->do_calculate($detail->periode_id);
 
 		if ($insert_calculate) {
 
@@ -391,22 +380,6 @@ class Periodepenilaian extends MX_Controller
 		}
 	}
 
-	//keterangan hasil kalkulasi
-	public function label_calculate($total) {
-		if ($total >= 3.5 && $total <= 4) {
-			return 'Sangat Baik';
-		}
-		if ($total>= 3.0 && $total <= 3.4) {
-			return 'Baik';
-		}
-		if ($total >= 2.5 && $total <= 2.9) {
-			return 'Cukup';
-		}
-		if ($total < 2.5) {
-			return 'Kurang';
-		}
-	}
-
 	//data dimasukan kedalam database
 	public function insert_calculate($data) {
 		$date = date('Y-m-d H:i:s');
@@ -414,8 +387,8 @@ class Periodepenilaian extends MX_Controller
 			$value = array(
 				'periode_id' => $_data['periode_id'],
 				'user_id' => $_data['user_id'],
-				'total' => $_data['total'],
-				'label' => $_data['label'],
+				// 'total' => $_data['total'],
+				// 'label' => $_data['label'],
 				'created_at' => $date,
 				'updated_at' => $date
 			);
@@ -434,9 +407,6 @@ class Periodepenilaian extends MX_Controller
 						'periode_id' => $_data['periode_id'],
 						'score' => $_nilai['score'],
 						'bobot' => $_nilai['bobot'],
-						'max' => $_nilai['max'],
-						'pembagian' => $_nilai['pembagian'],
-						'hasil_bobot' => $_nilai['hasil_bobot'],
 					);
 
 					//table spk_detail_calculate
@@ -444,9 +414,102 @@ class Periodepenilaian extends MX_Controller
 
 				}
 			}
-		}
+		}	
 
 		return true;
+	}
+
+	public function do_calculate($periode_id)
+	{
+		$getKriteria = $this->_dataModel->getList($this->prefix . '_kriteria', '', array('kriteria_id', 'ASC'), '', '');
+					
+		$kategori = array();
+		foreach ($getKriteria as $_kriteria) { //looping kriteria
+			$where = array('periode_id' => $periode_id, 'kriteria_id' => $_kriteria['kriteria_id']);
+			$check_nilai = $this->_dataModel->getList($this->prefix . '_detail_calculate', $where, array('kriteria_id', 'ASC'), '', '');
+			
+			foreach ($check_nilai as $key => $nilai) {
+				$datamax[$key] = $nilai['score']; //masukan nilai kedalam data score (dijumlahkan)
+			}
+			//cari nilai tertinggi
+			$max = max($datamax);
+
+			//hasil dari perhitungan
+			$datakategori = array(
+				'kriteria_id' => $_kriteria['kriteria_id'],
+				'max' => $max,
+			);
+
+			array_push($kategori, $datakategori); //hasil pehitungan dimasukan kedalam array
+		}
+
+		foreach ($kategori as $k) {
+			$where = array('periode_id' => $periode_id, 'kriteria_id' => $k['kriteria_id']);
+			$get_nilai = $this->_dataModel->getList($this->prefix . '_detail_calculate', $where, array('kriteria_id', 'ASC'), '', '');
+			$max = 0;
+			foreach ($get_nilai as $value) {
+				if ($value['kriteria_id'] == $k['kriteria_id']) {
+					$max = $k['max'];
+					$pembagian = number_format(($value['score']/$max), 1); //MATRIX TERNORMALISASI
+					$hasil_bobot = number_format(($pembagian*$value['bobot']), 1); //metode saw pembagian bobot
+				}
+
+				$update = array(
+					'max' => $max,
+					'pembagian' => $pembagian,
+					'hasil_bobot' => $hasil_bobot
+				);
+
+				$res = $this->_dataModel->update($this->prefix . '_detail_calculate', 'calculate_detail_id', $value['calculate_detail_id'], $update);
+			}
+		}
+
+		$this->update_total($periode_id);
+
+	}
+
+	public function update_total($periode_id)
+	{
+		$where = array('periode_id' => $periode_id);
+		$check_user = $this->_dataModel->getList($this->prefix . '_calculate', $where, array('calculate_id', 'ASC'), '', '');
+
+		foreach ($check_user as $user) {
+			$where = array('periode_id' => $periode_id, 'user_id' => $user['user_id']);
+			$check_nilai = $this->_dataModel->getList($this->prefix . '_detail_calculate', $where, array('calculate_id', 'ASC'), '', '');
+
+			$total = 0;
+			foreach ($check_nilai as $key => $nilai) {
+				$total += $nilai['hasil_bobot']; //masukan nilai kedalam data (dijumlahkan)
+			}
+			
+			//update_hasil
+			
+			$total = number_format($total, 1);
+			$label = $this->label_calculate($total);
+			//data user yang telah terhitung
+			$update = array(
+				'total' => $total,
+				'label' => $label,
+			);
+
+			$res = $this->_dataModel->update($this->prefix . '_calculate', 'calculate_id', $user['calculate_id'], $update);
+		}
+	}
+
+	//keterangan hasil kalkulasi
+	public function label_calculate($total) {
+		if ($total >= 3.5 && $total <= 4) {
+			return 'Sangat Baik';
+		}
+		if ($total>= 3.0 && $total <= 3.4) {
+			return 'Baik';
+		}
+		if ($total >= 2.5 && $total <= 2.9) {
+			return 'Cukup';
+		}
+		if ($total < 2.5) {
+			return 'Kurang';
+		}
 	}
 
 	//fungsi untuk memberi tau kalau sudah dihitung / tidak bisa dihitung

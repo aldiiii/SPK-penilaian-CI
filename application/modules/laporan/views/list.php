@@ -113,13 +113,13 @@
 						<tbody>
 							<tr>
 							<?php
-								if ($max->num_rows() == 0) {
+								if (count($max) <= 0) {
 									echo "<tr><td colspan='5' align='center'>Data kosong</td></tr>";
 								} else {
 
-									foreach ($max->result() as $_max) {
+									foreach ($max as $_max) {
 										echo "
-												<td>" . $_max->score . "</td>
+												<td>" . $_max['score'] . "</td>
 											";
 
 										$no++;

@@ -195,13 +195,15 @@ class DataModel extends CI_Model
 		return $res;
 	}
 
-	public function getMax($table, $cond) {
+	public function getMax($table, $cond, $order) {
 		$res = false;
 
 		try {
 
 			$this->db->select_max('score');
 			$this->db->where($cond);
+			$this->db->order_by($order[0], $order[1]);
+			
 			$query = $this->db->get($table);
 
 			if ($query->num_rows() > 0) {
@@ -257,6 +259,17 @@ class DataModel extends CI_Model
 		$this->db->order_by($order);
 		$this->db->group_by($group);
 		
+		return $this->db->get();
+	}
+
+	public function getGroupUser($table, $where, $order, $field)
+	{
+		$this->db->select($field);
+		$this->db->from($table);
+		$this->db->where($where);
+		$this->db->group_by($field);
+		$this->db->order_by($order);
+
 		return $this->db->get();
 	}
 

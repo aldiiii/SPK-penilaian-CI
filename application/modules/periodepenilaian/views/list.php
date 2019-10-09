@@ -41,7 +41,7 @@
 							<th width="15%">Nama Periode</th>
 							<th width="15%">Tanggal Mulai</th>
 							<th width="15%">Tanggal Selesai</th>
-							<th width="15%">Dibuat oleh</th>
+							<th width="15%">Dibuat Oleh</th>
 							<th width="15%">Status Hitung</th>
 							<th width="45%" class="text-center">Aksi</th>
 						</tr>
