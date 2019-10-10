@@ -461,7 +461,7 @@ class Penilaian extends MX_Controller
 
 			$data = array();
 			if ($getPenutur) {
-				$where = array('periode_id' => $periode_id);
+				$where = array('periode_id' => $periode_id, 'user_id' => $this->auth->user()['id']);
 				$getUserPeriode = $this->_dataModel->getGroupUser($this->prefix . '_v_penilaian', $where, 'kriteria_id ASC', 'target_user_id');
 
 				$userPeriode = [];
